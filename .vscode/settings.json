@@ -1,0 +1,8 @@
+{
+    "editor.formatOnSave": true,
+    "editor.rulers": [
+        140
+    ],
+    "editor.minimap.maxColumn": 140,
+    "svelte.plugin.svelte.format.config.printWidth": 140
+}
