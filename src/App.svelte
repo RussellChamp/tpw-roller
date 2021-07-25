@@ -7,7 +7,9 @@
 </script>
 
 <main>
-  <h1>Sup world?</h1>
+  <h1>The Perilous Wilds</h1>
+  <h2>A web-app for rolling on tables and getting funny results</h2>
+  <hr />
   <KingdomRoller />
   <hr />
   <RegionRoller />

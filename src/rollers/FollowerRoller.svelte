@@ -16,7 +16,7 @@
 <main>
   <h2>Random Follower</h2>
   <span class="btn">
-    <Button color="primary" on:click={roll}>Roll Follower</Button>
+    <Button color="primary" on:click={roll}>Roll Followers</Button>
   </span>
 
   {#each rollResults as result}

@@ -5,7 +5,7 @@
 
   import { kingdoms } from "./data";
 
-  export let rollResults: { value: string; icon: string; timestamp: string }[] = [];
+  let rollResults: { value: string; icon: string; timestamp: string }[] = [];
   let kingdom = "arpad";
   let categories: string[];
 
