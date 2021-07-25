@@ -18,11 +18,11 @@
 </script>
 
 <main>
-  <h1>Random Places</h1>
+  <h2>Random Places</h2>
   <button type="button" class="btn btn-primary" on:click={roll}>Roll Region</button>
 
   {#each rollResults as result}
-    <h3>{result.timestamp}: {result.value}</h3>
+    <h4>{result.timestamp}: {result.value}</h4>
   {/each}
 </main>
 

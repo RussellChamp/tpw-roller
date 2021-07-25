@@ -1,4 +1,12 @@
-export const kingdoms = {
+export class Kingdom {
+    constructor(public description: string = "", public subtitle: string = "") { };
+    categories: string[];
+    male: string[];
+    female: string[];
+    steading: string[];
+    mount: string[];
+}
+export const kingdoms: { [kingdom: string]: Kingdom } = {
     arpad: {
         description: 'The Kingdom of Arpad',
         subtitle: 'Based loosely on Hungarian',

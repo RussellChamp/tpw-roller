@@ -1,45 +1,46 @@
 <script lang="ts">
-  import { kingdoms } from "./data";
   import * as _ from "lodash";
   import { format as formatDate } from "date-fns";
+  import { Button, Icon } from "sveltestrap";
 
-  export let rollResults: { value: string; timestamp: string }[] = [];
+  import { kingdoms } from "./data";
+
+  export let rollResults: { value: string; icon: string; timestamp: string }[] = [];
   let kingdom = "arpad";
-  let category = "male";
   let categories: string[];
-  let values: string[];
 
-  function addResult(result: string) {
-    rollResults = [{ value: result, timestamp: formatDate(new Date(), "P kk:mm:ss") }, ...rollResults];
+  function addResult(value: string, category: string) {
+    let icon = { male: "person-fill", female: "person", steading: "house-door-fill", mount: "bicycle" }[category] || "";
+    rollResults = [{ value, icon, timestamp: formatDate(new Date(), "P kk:mm:ss") }, ...rollResults];
   }
 
-  function rollName(event: Event) {
-    addResult(_.sample(values));
+  function rollName(category: string) {
+    let values = kingdoms[kingdom][category];
+
+    addResult(_.sample(values), category);
   }
 
   $: categories = kingdoms[kingdom].categories;
-  $: values = kingdoms[kingdom][category];
 </script>
 
 <main>
-  <h1>
+  <h2>
     <select bind:value={kingdom}>
       {#each Object.keys(kingdoms) as k}
         <option value={k}>{kingdoms[k].description}</option>
       {/each}
     </select>
-  </h1>
-  <h2>{kingdoms[kingdom].subtitle}</h2>
-  <hr />
+  </h2>
+  <h3>{kingdoms[kingdom].subtitle}</h3>
 
-  <select bind:value={category}>
-    {#each categories as c}
-      <option value={c}>{_.capitalize(c)}</option>
-    {/each}
-  </select>
-  <button type="button" class="btn btn-primary" on:click={rollName}>Roll {_.capitalize(category)}</button>
+  {#each categories as category}
+    <span class="btn">
+      <Button color="primary" on:click={() => rollName(category)}>Roll {_.capitalize(category)}</Button>
+    </span>
+  {/each}
+
   {#each rollResults as result}
-    <h3>{result.timestamp}: {result.value}</h3>
+    <h4>{result.timestamp}: <Icon name={result.icon} /> {result.value}</h4>
   {/each}
 </main>
 

@@ -2,6 +2,8 @@
   import KingdomRoller from "./rollers/KingdomRoller.svelte";
   import RegionRoller from "./rollers/RegionRoller.svelte";
   import PlaceRoller from "./rollers/PlaceRoller.svelte";
+  import FollowerRoller from "./rollers/FollowerRoller.svelte";
+  import Footer from "./componenets/Footer.svelte";
 </script>
 
 <main>
@@ -11,6 +13,10 @@
   <RegionRoller />
   <hr />
   <PlaceRoller />
+  <hr />
+  <FollowerRoller />
+  <hr />
+  <Footer />
 </main>
 
 <style>

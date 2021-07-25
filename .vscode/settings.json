@@ -4,5 +4,6 @@
         140
     ],
     "editor.minimap.maxColumn": 140,
-    "svelte.plugin.svelte.format.config.printWidth": 140
+    "svelte.plugin.svelte.format.config.printWidth": 140,
+    "editor.tabSize": 2
 }
