@@ -36,3 +36,34 @@ export const kingdoms = {
         mount: ['Anginu (North Wind)', 'Api (Blaze)', 'Bakat (Felicity)', 'Bakti (Loyal)', 'Beruntung (Lucky)', 'Bilah (Blade)', 'Biru (Blue)', 'Gemetar (Quiver)', 'Guntur (Thunder)', 'Hidungi (Black Nose)', 'Janda (Widow)', 'Kakicerah (Bright Foot)', 'Kakiring (Light Foot)', 'Keriangan (Sunshine)', 'Kunang (Firefly)', 'Lapar (Hungry)', 'Murni (Pure)', 'Paruh (Bill)', 'Penebus (Avenger)', 'Penyelemat (Savior)', 'Prajurit (Warrior)', 'Rusak (Broken)', 'Satucep (Fast One)', 'Setia (True Heart)', 'Tahanla (Durable)',]
     },
 };
+
+export const regions = {
+    templates: [
+        '[ADJECTIVE] [TERRAIN]',
+        '[TERRAIN] of (the) [NOUN]',
+        'The [TERRAIN] [ADJECTIVE]',
+        '[NOUN] [TERRAIN]',
+        '[NOUN]\'s [ADJECTIVE] [TERRAIN]',
+        '[ADJECTIVE] [TERRAIN] of (the) [NOUN]'
+    ],
+    terrain: ['Bay', 'Bluffs', 'Bog', 'Cliffs', 'Desert', 'Downs', 'Dunes', 'Expanse', 'Fells', 'Fen', 'Flats', 'Foothills', 'Forest', 'Groves', 'Heath', 'Heights', 'Hills', 'Hollows', 'Jungle', 'Lake', 'Lowland', 'March', 'Marsh', 'Meadows', 'Moor', 'Morass', 'Mounds', 'Mountains', 'Peaks', 'Plains', 'Prairie', 'Quagmire', 'Range', 'Reach', 'Sands', 'Savanna', 'Scarps', 'Sea', 'Slough', 'Sound', 'Steppe', 'Swamp', 'Sweep', 'Teeth', 'Thicket', 'Upland', 'Wall', 'Waste', 'Wasteland', 'Woods',],
+    adjective: ['Ageless', 'Ashen', 'Black', 'Blessed', 'Blighted', 'Blue', 'Broken', 'Burning', 'Cold', 'Cursed', 'Dark', 'Dead', 'Deadly', 'Deep', 'Desolate', 'Diamond', 'Dim', 'Dismal', 'Dun', 'Eerie', 'Endless', 'Fallen', 'Far', 'Fell', 'Flaming', 'Forgotten', 'Forsaken', 'Frozen', 'Glittering', 'Golden', 'Green', 'Grim', 'Holy', 'Impassable', 'Jagged', 'Light', 'Long', 'Misty', 'Perilous', 'Purple', 'Red', 'Savage', 'Shadowy', 'Shattered', 'Shifting', 'Shining', 'Silver', 'White', 'Wicked', 'Yellow',],
+    noun: ['[NAME]', 'Ash', 'Bone', 'Darkness', 'Dead', 'Death', 'Desolation', 'Despair', 'Devil', 'Doom', 'Dragon', 'Fate', 'Fear', 'Fire', 'Fury', 'Ghost', 'Giant', 'God', 'Gold', 'Heaven', 'Hell', 'Honor', 'Hope', 'Horror', 'King', 'Life', 'Light', 'Lord', 'Mist', 'Peril', 'Queen', 'Rain', 'Refuge', 'Regret', 'Savior', 'Shadow', 'Silver', 'Skull', 'Sky', 'Smoke', 'Snake', 'Sorrow', 'Storm', 'Sun', 'Thorn', 'Thunder', 'Traitor', 'Troll', 'Victory', 'Witch',]
+    // * Choose a name appropriate to your setting; or, if you have a name list, roll one up. Dw THE MAP
+};
+
+
+export const places = {
+    templates: [
+        'The [PLACE]',
+        'The [ADJECTIVE] [PLACE]',
+        'The [PLACE] of (the) [NOUN]',
+        '(The) [NOUN]\'s [PLACE]',
+        '[PLACE] of the [ADJECTIVE] [NOUN]',
+        'The [ADJECTIVE] [NOUN]'
+    ],
+    place: ['Barrier', 'Beach', 'Bowl', 'Camp', 'Cave', 'Circle', 'City', 'Cliff', 'Crater', 'Crossing', 'Crypt', 'Den', 'Ditch', 'Falls', 'Fence', 'Field', 'Fort', 'Gate', 'Grove', 'Hill', 'Hole', 'Hut', 'Keep', 'Lake', 'Marsh', 'Meadow', 'Mountain', 'Pit', 'Post', 'Ridge', 'Ring', 'Rise', 'Road', 'Rock', 'Ruin', 'Shrine', 'Spire', 'Spring', 'Stone', 'Tangle', 'Thmple', 'Throne', 'Tomb', 'Tower', 'Town', 'Tree', 'Vale', 'Valley', 'Village', 'Wall',],
+    adjective: ['Ancient', 'Ashen', 'Black', 'Bloody', 'Blue', 'Bright', 'Broken', 'Burning', 'Clouded', 'Copper', 'Cracked', 'Dark', 'Dead', 'Doomed', 'Endless', 'Fallen', 'Far', 'Fearsome', 'Floating', 'Forbidden', 'Frozen', 'Ghostly', 'Gloomy', 'Golden', 'Grim', 'Hidden', 'High', 'Iron', 'Jagged', 'Lonely', 'Lost', 'Low', 'Near', 'Petrified', 'Red', 'Screaming', 'Sharp', 'Shattered', 'Shifting', 'Shining', 'Shivering', 'Shrouded', 'Silver', 'Stalwart', 'Stoney', 'Sunken', 'Thorny', 'Thundering', 'White', 'Withered',],
+    noun: ['[Name]', 'Arm', 'Ash', 'Blood', 'Child', 'Cinder', 'Corpse', 'Crystal', 'Dagger', 'Death', 'Demon', 'Devil', 'Doom', 'Eye', 'Fear', 'Finger', 'Fire', 'Foot', 'Ghost', 'Giant', 'Goblin', 'God', 'Gold', 'Hand', 'Head', 'Heart', 'Hero', 'Hope', 'King', 'Knave', 'Knight', 'Muck', 'Mud', 'Priest', 'Queen', 'Sailor', 'Silver', 'Skull', 'Smoke', 'Souls', 'Spear', 'Spirit', 'Stone', 'Sword', 'Thief', 'Troll', 'Warrior', 'Water', 'Witch', 'Wizard',],
+    // * Choose a name appropriate to your setting; or, if you have a name list, roll one up.
+};

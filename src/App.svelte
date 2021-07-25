@@ -1,10 +1,16 @@
 <script lang="ts">
-  import Roller from "./Roller.svelte";
+  import KingdomRoller from "./rollers/KingdomRoller.svelte";
+  import RegionRoller from "./rollers/RegionRoller.svelte";
+  import PlaceRoller from "./rollers/PlaceRoller.svelte";
 </script>
 
 <main>
   <h1>Sup world?</h1>
-  <Roller />
+  <KingdomRoller />
+  <hr />
+  <RegionRoller />
+  <hr />
+  <PlaceRoller />
 </main>
 
 <style>
