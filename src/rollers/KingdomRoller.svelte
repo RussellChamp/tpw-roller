@@ -3,7 +3,7 @@
   import { format as formatDate } from "date-fns";
   import { Button, Icon } from "sveltestrap";
 
-  import { kingdoms } from "./data";
+  import { kingdoms } from "./kingdoms";
 
   let rollResults: { value: string; icon: string; timestamp: string }[] = [];
   let kingdom = "arpad";

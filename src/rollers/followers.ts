@@ -1,6 +1,6 @@
 import { random, sample, sampleSize, times } from 'lodash';
 
-import { Kingdom, kingdoms } from './data';
+import { Kingdom, kingdoms } from './kingdoms';
 
 export class Follower {
     constructor(public name: string = "") { };

@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { places } from "./data";
   import * as _ from "lodash";
   import { format as formatDate } from "date-fns";
+  import { places } from "./places";
   import { bodgeString } from "./utils";
 
   export let rollResults: { value: string; timestamp: string }[] = [];
