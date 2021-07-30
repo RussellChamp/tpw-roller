@@ -1,3 +1,4 @@
 Add NPC, and Dungeons roll tables
 Put the rollers in their own accordion slots
 Make everything look nicer
+Add a 3d dice rolling visualizer

@@ -1,6 +1,7 @@
 import { random, replace, sample, sampleSize } from "lodash";
 
 export class Ability {
+  type: string = "ability";
   constructor(public roll: number = 0, public description = "") { };
 }
 
@@ -26,6 +27,7 @@ export function rollAbility(roll: number = random(1, 12)): Ability {
 }
 
 export class Activity {
+  type: string = "activity";
   constructor(public roll: number = 0, public description: string = "") { };
 }
 
@@ -50,6 +52,7 @@ export function rollActivity(roll: number = random(1, 12)): Activity {
 }
 
 export class Adjective {
+  type: string = "adjective";
   constructor(public roll: number = 0, public description: string = "") { };
 }
 
@@ -74,6 +77,7 @@ export function rollAdjective(roll: number = random(1, 12)): Adjective {
 }
 
 export class Age {
+  type: string = "age";
   constructor(public roll: number = 0, public description: string = "") { };
 }
 
@@ -98,6 +102,7 @@ export function rollAge(roll: number = random(1, 12)): Age {
 }
 
 export class Alignment {
+  type: string = "alignment";
   constructor(public roll: number = 0, public description: string = "") { };
 }
 
@@ -120,6 +125,7 @@ export function rollAlignment(roll: number = random(1, 12)): Alignment {
 }
 
 export class Aspect {
+  type: string = "aspect";
   constructor(public roll: number = 0, public description: string = "") { };
 }
 
@@ -145,6 +151,7 @@ export function rollAspect(roll: number = random(1, 12)): Aspect {
 }
 
 export class Condition {
+  type: string = "condition";
   constructor(public roll: number = 0, public description: string = "") { };
 }
 
@@ -171,6 +178,7 @@ export function rollCondition(roll: number = random(1, 12)): Condition {
 }
 
 export class Disposition {
+  type: string = "disposition";
   constructor(public roll: number = 0, public description: string = "") { };
 }
 
@@ -197,6 +205,7 @@ export function rollDisposition(roll: number = random(1, 12)): Disposition {
 }
 
 export class Element {
+  type: string = "element";
   constructor(public roll: number = 0, public description: string = "") { };
 }
 
@@ -221,6 +230,7 @@ export function rollElement(roll: number = random(1, 12)): Element {
 }
 
 export class Feature {
+  type: string = "feature";
   constructor(public roll: number = 0, public description: string = "") { };
 }
 
@@ -255,6 +265,7 @@ export function rollFeature(roll: number = random(1, 12)): Feature {
 }
 
 export class MagicType {
+  type: string = "magic type";
   constructor(public roll: number = 0, public description: string = "") { };
 }
 
@@ -278,6 +289,7 @@ export function rollMagicType(roll: number = random(1, 12)): MagicType {
 }
 
 export class NumAppearing {
+  type: string = "num appearing";
   constructor(public roll: number = 0, public description: string = "", public count: string = "") { };
 }
 
@@ -298,6 +310,7 @@ export function rollNumAppearing(roll: number = random(1, 12)): NumAppearing {
 }
 
 export class Oddity {
+  type: string = "oddity";
   constructor(public roll: number = 0, public description: string = "") { };
 }
 
@@ -323,6 +336,7 @@ export function rollOddity(roll: number = random(1, 12)): Oddity {
 }
 
 export class Orientation {
+  type: string = "orientation";
   constructor(public roll: number = 0, public description: string = "") { };
 }
 
@@ -355,6 +369,7 @@ export function rollOrientation(roll: number = random(1, 12)): Orientation {
 }
 
 export class Ruination {
+  type: string = "ruination";
   constructor(public roll: number = 0, public description: string = "") { };
 }
 
@@ -383,6 +398,7 @@ export function rollRuination(roll: number = random(1, 12)): Ruination {
 }
 
 export class Size {
+  type: string = "size";
   constructor(public roll: number = 0, public description: string = "") { };
 }
 
@@ -405,6 +421,7 @@ export function rollSize(roll: number = random(1, 12)): Size {
 }
 
 export class Tag {
+  type: string = "tag";
   constructor(public roll: number = 0, public description: string = "") { };
 }
 
@@ -438,6 +455,7 @@ export function rollTag(roll: number = random(1, 12)) {
 }
 
 export class Terrain {
+  type: string = "terrain";
   constructor(public roll: number = 0, public description: string = "") { };
 }
 
@@ -464,6 +482,7 @@ export function rollTerrain(roll: number = random(1, 12)): Terrain {
 }
 
 export class Visibility {
+  type: string = "visibility";
   constructor(public roll: number = 0, public description: string = "") { };
 }
 

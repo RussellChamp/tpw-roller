@@ -24,13 +24,10 @@
     rollVisibility,
   } from "./details";
 
-  let rollResults: { category: string; value: string; timestamp: string }[] = [];
+  let rollResults: { type: string; value: string; timestamp: string }[] = [];
 
-  function addResult(item: { roll: number; description: string }) {
-    rollResults = [
-      { category: item.constructor.name, value: item.description, timestamp: formatDate(new Date(), "P kk:mm:ss") },
-      ...rollResults,
-    ];
+  function addResult(item: { type: string; description: string; roll: number }) {
+    rollResults = [{ type: item.type, value: item.description, timestamp: formatDate(new Date(), "P kk:mm:ss") }, ...rollResults];
   }
 </script>
 
@@ -94,7 +91,7 @@
   </span>
 
   {#each rollResults as result}
-    <h4>{result.timestamp}: ({result.category}): {result.value}</h4>
+    <h4>{result.timestamp}: ({result.type}): {result.value}</h4>
   {/each}
 </main>
 
