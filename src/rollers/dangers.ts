@@ -144,17 +144,11 @@ export function rollTrapHazard(roll: number = random(1, 12)): string {
   return "";
 }
 
-// 1-3		1-2		1-2	
-// 4-8		34		3-5	
-// 9-11		5-7		6-8	
-// 12	divine	8-9		9	
-// 		10-11		10-12 ambush
-// ASPECT, VISIBILITY		12	ODDITY	CREATURE responsible,
-// 				ASPECT, VISIBILITY
-
 export function rollDangerCreature(roll: number = random(1, 12)): Danger {
   let danger = new Danger(roll, 0, 0, "creature");
   danger.creature = rollCreature();
+  danger.subcategory = danger.creature.type + (danger.creature.subtype !== "" ? "/" + danger.creature.subtype : "");
+  danger.description = danger.creature.description;
 
   return danger;
 }

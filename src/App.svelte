@@ -3,7 +3,10 @@
   import KingdomRoller from "./rollers/KingdomRoller.svelte";
   import RegionRoller from "./rollers/RegionRoller.svelte";
   import PlaceRoller from "./rollers/PlaceRoller.svelte";
+  import DangerRoller from "./rollers/DangerRoller.svelte";
+  import DiscoveryRoller from "./rollers/DiscoveryRoller.svelte";
   import FollowerRoller from "./rollers/FollowerRoller.svelte";
+  import DetailsRoller from "./rollers/DetailsRoller.svelte";
   import Footer from "./componenets/Footer.svelte";
 </script>
 
@@ -17,10 +20,15 @@
   <hr />
   <PlaceRoller />
   <hr />
+  <DangerRoller />
+  <hr />
+  <DiscoveryRoller />
+  <hr />
   <CreatureRoller />
   <hr />
   <FollowerRoller />
   <hr />
+  <DetailsRoller />
   <Footer />
 </main>
 

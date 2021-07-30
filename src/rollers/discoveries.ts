@@ -1,7 +1,9 @@
 import { random, sample } from 'lodash';
 import { Creature, rollCreature } from './creatures';
-import { rollAlignment, rollElement, rollMagicType } from './details';
+import { rollAlignment, rollElement, rollMagicType, rollOddity, rollTerrain } from './details';
+import { rollDungeon } from './dungeons';
 import { rollSteading, Steading } from './steadings';
+import { rollTreasure } from './treasures';
 
 export class Discovery {
   constructor(public roll: number = 0, public subroll: number = 0, public specificroll: number = 0, public category: string = "", public subcategory: string = "", public description: string = "") { };
@@ -47,7 +49,7 @@ export function rollUnnaturalFeature(roll: number = random(1, 12), subroll: numb
 }
 
 export function rollArcaneFeature(roll: number = random(1, 12)): string {
-  let feature = random(1, 3) == 3 ? sample([rollAlignment(), rollMagicType()]) + " " : "";
+  let feature = random(1, 3) == 3 ? sample([rollAlignment().description, rollMagicType().description]) + " " : "";
 
   if (roll <= 2) {
     feature += "residue";
@@ -127,71 +129,96 @@ export function rollNaturalFeature(roll: number = random(1, 12), subroll: number
 }
 
 export function rollLair(roll: number = random(1, 12)): string {
-  // 1-2	LAIR
+  if (roll <= 3) {
+    return "burrow";
+  } else if (roll <= 7) {
+    return "cave/tunnels";
+  } else if (roll <= 9) {
+    return "nest/aerie";
+  } else if (roll <= 10) {
+    return "hive";
+  } else if (roll <= 10) {
+    return `${rollRuinStructure()} ruins`;
+  }
 
-  // 1-3	burrow
-  // 4-7	cave/tunnels
-  // 8-9	nest/aerie
-  // 10	hive
-  // 1142	ruins (see STRUCTURE)
   return "";
-
 }
 
 export function rollObstacle(roll: number = random(1, 12)): string {
-  // 3-4	OBSTACLE
-  // 1-5	difficult ground
-  // 	(specific to terrain)
-  // 6-8	cliff/crevasse/chasm
-  // 9-10	ravine/gorge
-  // 11-12	ODDITY
+  if (roll <= 5) {
+    return "difficult ground";
+  } else if (roll <= 8) {
+    return "cliff/crevasse/chasm";
+  } else if (roll <= 10) {
+    return "ravine/gorge";
+  } else if (roll <= 12) {
+    return rollOddity().description;
+  }
+
   return "";
 }
 
 export function rollTerrainChange(roll: number = random(1, 12)): string {
-  // 5-7	TERRAIN CHANGE
-  // 14	limited area of an
-  // 	another TERRAIN type
-  // 5-6	crevice/hole/pit/cave
-  // 7-8	altitude change
-  // 9-10	canyon/valley
-  // 11-12	rise/peak in distance
+  if (roll <= 4) {
+    return `limited area of ${rollTerrain()}`;
+  } else if (roll <= 6) {
+    return "crevice/hole/pit/cave";
+  } else if (roll <= 8) {
+    return "altitude change";
+  } else if (roll <= 10) {
+    return "canyon/valley";
+  } else if (roll <= 12) {
+    return "rise/peak in distance";
+  }
+
   return "";
 }
 
 export function rollWaterFeature(roll: number = random(1, 12)): string {
-  // 8-9 WATER FEATURE 10-11 LANDMARK	12 RESOURCE
-  // I	spring/hotspring	1-3	water-based (water-	1-4	game/fruit/vegetable
-  // 2	waterfall/geyser	fall, geyser, etc.)	5-6	herb/spice/dye source
-  // 3-6	creek/stream/brook	4-6	plant-based (ancient	7-9	timber/stone
-  // 7-8	pond/lake	tree, giant flowers, etc.)	10-11	ore (copper, iron, etc.)
-  // 9-10	river	7-10	earth-based (peak,	12	precious metal/gems
-  // 11-12	sea/ocean	formation, crater, etc.)
-  // 	SIZE,	............................... VISIBILITY.
+  if (roll <= 1) {
+    return "spring/hotspring";
+  } else if (roll <= 2) {
+    return "waterfall/geyser";
+  } else if (roll <= 6) {
+    return "creek/stream/brook";
+  } else if (roll <= 8) {
+    return "pond/lake";
+  } else if (roll <= 10) {
+    return "river";
+  } else if (roll <= 12) {
+    return "sea/ocean";
+  }
+
   return "";
 }
 
 export function rollLandmark(roll: number = random(1, 12)): string {
-  // 8-9 WATER FEATURE 10-11 LANDMARK	12 RESOURCE
-  // I	spring/hotspring	1-3	water-based (water-	1-4	game/fruit/vegetable
-  // 2	waterfall/geyser	fall, geyser, etc.)	5-6	herb/spice/dye source
-  // 3-6	creek/stream/brook	4-6	plant-based (ancient	7-9	timber/stone
-  // 7-8	pond/lake	tree, giant flowers, etc.)	10-11	ore (copper, iron, etc.)
-  // 9-10	river	7-10	earth-based (peak,	12	precious metal/gems
-  // 11-12	sea/ocean	formation, crater, etc.)
-  // 	SIZE,	............................... VISIBILITY.
+  if (roll <= 3) {
+    return "water-based (water-fall, geyser, etc.)";
+  } else if (roll <= 6) {
+    return "plant-based (ancient tree, giant flowers, etc.)";
+  } else if (roll <= 10) {
+    return "earth-based (peak, formation, crater, etc.)";
+  } else if (roll <= 12) {
+    return rollOddity().description
+  }
+
   return "";
 }
 
 export function rollResource(roll: number = random(1, 12)): string {
-  // 8-9 WATER FEATURE 10-11 LANDMARK	12 RESOURCE
-  // I	spring/hotspring	1-3	water-based (water-	1-4	game/fruit/vegetable
-  // 2	waterfall/geyser	fall, geyser, etc.)	5-6	herb/spice/dye source
-  // 3-6	creek/stream/brook	4-6	plant-based (ancient	7-9	timber/stone
-  // 7-8	pond/lake	tree, giant flowers, etc.)	10-11	ore (copper, iron, etc.)
-  // 9-10	river	7-10	earth-based (peak,	12	precious metal/gems
-  // 11-12	sea/ocean	formation, crater, etc.)
-  // 	SIZE,	............................... VISIBILITY.
+  if (roll <= 4) {
+    return "game/fruit/vegetable";
+  } else if (roll <= 6) {
+    return "herb/spice/dye source";
+  } else if (roll <= 9) {
+    return "timber/stone";
+  } else if (roll <= 11) {
+    return "ore (copper, iron, etc.)";
+  } else if (roll <= 12) {
+    return "precious metal/gems";
+  }
+
   return "";
 }
 
@@ -215,44 +242,60 @@ function rollEvidence(roll: number = random(1, 12), subroll: number = random(1, 
 
 
 export function rollTracksSpoor(roll: number = random(1, 12)): string {
+  if (roll <= 3) {
+    return "faint/unclear";
+  } else if (roll <= 6) {
+    return "definite/clear";
+  } else if (roll <= 8) {
+    return "multiple";
+  } else if (roll <= 10) {
+    return "signs of violence";
+  } else if (roll <= 12) {
+    return "trail of blood/other";
+  }
 
-  // 1-6	TRACKS/SPOOR
-  // 1-3	faint/unclear
-  // 4-6	definite/clear
-  // 7-8	multiple
-  // 9-10	signs of violence
-  // 11-12	trail of blood/other
-  // AGE, CREATURE responsible
-  // 44
   return "";
 }
 
 export function rollRemainsDebris(roll: number = random(1, 12)): string {
+  if (roll <= 4) {
+    return "bones";
+  } else if (roll <= 7) {
+    return "corpse/carcass";
+  } else if (roll <= 9) {
+    return "site of violence";
+  } else if (roll <= 10) {
+    return "junk/refuse";
+  } else if (roll <= 11) {
+    return "lost supplies/cargo";
+  } else if (roll <= 12) {
+    return "tools/weapons/armor";
+  }
 
-  // 7-10	REMAINS/DEBRIS
-  // 1-4	bones
-  // 5-7	corpse/carcass
-  // 8-9	site of violence
-  // 10	junk/refuse
-  // 11	lost supplies/cargo
-  // 12	tools/weapons/armor
-  // AGE, VISIBILITY
   return "";
 }
 
 export function rollStashCache(roll: number = random(1, 12)): string {
-  // 1142 STASH/CACHE	
-  // 1-3	trinkets/coins
-  // 4-5	tools/weapons/armor
-  // 6-7	map
-  // 8-9	food/supplies
-  // 10-12	treasure (p43)
+  if (roll <= 3) {
+    return "trinkets/coins";
+  } else if (roll <= 5) {
+    return "tools/weapons/armor";
+  } else if (roll <= 7) {
+    return "map";
+  } else if (roll <= 9) {
+    return "food/supplies";
+  } else if (roll <= 12) {
+    return rollTreasure();
+  }
+
   return "";
 }
 
 export function rollDiscoveryCreature(roll: number = random(1, 12)): Discovery {
   let discovery = new Discovery(roll, 0, 0, "creature");
   discovery.creature = rollCreature();
+  discovery.subcategory = `${discovery.creature.type}/${discovery.creature.subtype}`;
+  discovery.description = discovery.creature.description;
 
   return discovery;
 }
@@ -273,9 +316,9 @@ export function rollStructure(roll: number = random(1, 12), subroll: number = ra
     discovery.description = rollBurialReligiousStructure(specificroll);
   } else if (subroll <= 8) {
     discovery.subcategory = "steading";
-    discovery.description = "steading";
-    discovery.specificroll = 0;
     discovery.steading = rollSteading();
+    discovery.description = discovery.steading.description;
+    discovery.specificroll = 0;
   } else if (subroll <= 12) {
     discovery.subcategory = "ruin";
     discovery.description = rollRuinStructure(specificroll);
@@ -285,70 +328,81 @@ export function rollStructure(roll: number = random(1, 12), subroll: number = ra
 }
 
 export function rollEnigmaticStructure(roll: number = random(1, 12)): string {
+  if (roll <= 4) {
+    return "earthworks";
+  } else if (roll <= 8) {
+    return "megalith";
+  } else if (roll <= 11) {
+    return "statue/idol/totem";
+  } else if (roll <= 12) {
+    return rollOddity().description;
+  }
 
-  // 912 STRUCTURE. Who built it? Is it connected to anything else they made nearby?
-  // 1	ENIGMATIC	2-3	INFRASTRUCTURE	4	DWELLING
-  // 1-4	earthworks	14	track/path	1-3	campsite
-  // 5-8	megalith	5-8	road	4-6	hovel/hut
-  // 941	statue/idol/totem	9-10	bridge/ford	7-8	farm
-  // 12	ODDITY	11	mine/quarry	9-10	inn/roadhouse
-  // AGE (1d844) SIZE (1d844)		12	aqueduct/canal/portal	1112	tower/keep/estate
-  // VISIBILITY		CREATURE responsible (1d4.4)		CREATURE responsible (1d4+4)
   return "";
 }
 
 export function rollInfrastructureStructure(roll: number = random(1, 12)): string {
+  if (roll <= 4) {
+    return "track/path";
+  } else if (roll <= 8) {
+    return "road";
+  } else if (roll <= 10) {
+    return "bridge/ford";
+  } else if (roll <= 11) {
+    return "mine/quarry";
+  } else if (roll <= 12) {
+    return "aqueduct/canal/portal";
+  }
 
-  // 912 STRUCTURE. Who built it? Is it connected to anything else they made nearby?
-  // 1	ENIGMATIC	2-3	INFRASTRUCTURE	4	DWELLING
-  // 1-4	earthworks	14	track/path	1-3	campsite
-  // 5-8	megalith	5-8	road	4-6	hovel/hut
-  // 941	statue/idol/totem	9-10	bridge/ford	7-8	farm
-  // 12	ODDITY	11	mine/quarry	9-10	inn/roadhouse
-  // AGE (1d844) SIZE (1d844)		12	aqueduct/canal/portal	1112	tower/keep/estate
-  // VISIBILITY		CREATURE responsible (1d4.4)		CREATURE responsible (1d4+4)
   return "";
 }
 
 export function rollDwellingStructure(roll: number = random(1, 12)): string {
+  if (roll <= 3) {
+    return "campsite";
+  } else if (roll <= 6) {
+    return "hovel/hut";
+  } else if (roll <= 8) {
+    return "farm";
+  } else if (roll <= 10) {
+    return "inn/roadhouse";
+  } else if (roll <= 12) {
+    return "tower/keep/estate";
+  }
 
-  // 912 STRUCTURE. Who built it? Is it connected to anything else they made nearby?
-  // 1	ENIGMATIC	2-3	INFRASTRUCTURE	4	DWELLING
-  // 1-4	earthworks	14	track/path	1-3	campsite
-  // 5-8	megalith	5-8	road	4-6	hovel/hut
-  // 941	statue/idol/totem	9-10	bridge/ford	7-8	farm
-  // 12	ODDITY	11	mine/quarry	9-10	inn/roadhouse
-  // AGE (1d844) SIZE (1d844)		12	aqueduct/canal/portal	1112	tower/keep/estate
-  // VISIBILITY		CREATURE responsible (1d4.4)		CREATURE responsible (1d4+4)
   return "";
 }
 
 export function rollBurialReligiousStructure(roll: number = random(1, 12)): string {
+  if (roll <= 2) {
+    return "grave marker/barrow";
+  } else if (roll <= 4) {
+    return "graveyard/necropolis";
+  } else if (roll <= 6) {
+    return "tomb/crypt";
+  } else if (roll <= 9) {
+    return "shrine";
+  } else if (roll <= 11) {
+    return "temple/retreat";
+  } else if (roll <= 12) {
+    return "great temple";
+  }
 
-  // 5-6	BURIAL/RELIGIOUS	7-8	STEADING	9-12 RUIN
-  // 1-2	grave marker/barrow	Roll on STEADING table		1-2	Ias'raucruRE (1d646)
-  // 3-4	graveyard/necropolis			3-4	DWELLING (1d844)
-  // 5-6	tomb/crypt			5-6	BURIAIJREIJGI0us
-  // 7-9	shrine			(1d8+4)
-  // 1041	temple/retreat			7-8	STEADING (00+2)
-  // 12	great temple			9-12	DUNGEON (pp60-61)
-  // CREATURE responsible (1d4+4),				CREATURE responsible (1d444),
-  // ALIGNMENT, ASPECT				AGE (1d8.4), RUINATION,
-  // 				VISIBILITY
   return "";
 }
 
 export function rollRuinStructure(roll: number = random(1, 12)): string {
+  if (roll <= 2) {
+    return `${rollInfrastructureStructure(random(1, 6) + 6)} ruins`;
+  } else if (roll <= 4) {
+    return `${rollDwellingStructure(random(1, 8) + 4)} ruins`;
+  } else if (roll <= 6) {
+    return `${rollBurialReligiousStructure(random(1, 8) + 4)} ruins`;
+  } else if (roll <= 8) {
+    return `${rollSteading(random(1, 10) + 2).description} ruins`;
+  } else if (roll <= 12) {
+    return `${rollDungeon().printDescription()} ruins`;
+  }
 
-  // 5-6	BURIAL/RELIGIOUS	7-8	STEADING	9-12 RUIN
-  // 1-2	grave marker/barrow	Roll on STEADING table		1-2	Ias'raucruRE (1d646)
-  // 3-4	graveyard/necropolis			3-4	DWELLING (1d844)
-  // 5-6	tomb/crypt			5-6	BURIAIJREIJGI0us
-  // 7-9	shrine			(1d8+4)
-  // 1041	temple/retreat			7-8	STEADING (00+2)
-  // 12	great temple			9-12	DUNGEON (pp60-61)
-  // CREATURE responsible (1d4+4),				CREATURE responsible (1d444),
-  // ALIGNMENT, ASPECT				AGE (1d8.4), RUINATION,
-  // 				VISIBILITY
   return "";
 }
