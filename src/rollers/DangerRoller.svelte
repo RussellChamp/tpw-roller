@@ -1,12 +1,22 @@
 <script lang="ts">
   import * as _ from "lodash";
   import { format as formatDate } from "date-fns";
+  import { Icon } from "sveltestrap";
   import { Danger, rollDanger } from "./dangers";
 
-  export let rollResults: { value: Danger; timestamp: string }[] = [];
+  export let rollResults: { danger: Danger; icon: string; timestamp: string }[] = [];
 
   function roll(event: Event) {
-    rollResults = [{ value: rollDanger(), timestamp: formatDate(new Date(), "P kk:mm:ss") }, ...rollResults];
+    let danger = rollDanger();
+    let icon =
+      danger.category == "unnatural entity"
+        ? "person-square"
+        : danger.category == "hazard"
+        ? "lightning-fill"
+        : danger.category == "creature"
+        ? "emoji-neutral"
+        : "";
+    rollResults = [{ danger, icon, timestamp: formatDate(new Date(), "P kk:mm:ss") }, ...rollResults];
   }
 </script>
 
@@ -16,7 +26,7 @@
 
   {#each rollResults as result}
     <h4>
-      {result.timestamp}: {result.value.category} ({result.value.subcategory}): {result.value.description}
+      {result.timestamp}: {result.danger.category} ({result.danger.subcategory}) <Icon name={result.icon} />: {result.danger.description}
     </h4>
   {/each}
 </main>
