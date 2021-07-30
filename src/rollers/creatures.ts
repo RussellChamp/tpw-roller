@@ -1,49 +1,59 @@
 import { random, sample } from 'lodash';
 import { rollUnnaturalEntity } from './dangers';
 
-import { Activity, Disposition, NumAppearing, rollAbility, rollActivity, rollAlignment, rollDisposition, rollFeature, rollNumAppearing, rollOddity, rollSize, Size } from './details';
-import { rollNpc } from './npcs';
+import { Ability, Activity, Adjective, Age, Alignment, Aspect, Condition, Disposition, Feature, NumAppearing, rollAbility, rollActivity, rollAlignment, rollDisposition, rollFeature, rollNumAppearing, rollOddity, rollSize, Size, Tag } from './details';
+import { Npc, rollNpc } from './npcs';
 
 export class Creature {
   constructor(public roll: number = 0, public subroll: number = 0, public specifcroll: number = 0, public type: string = "", public subtype: string = "", public description: string = "") { };
-  details: string[] = [];
+
+  ability?: Ability;
+  activity?: Activity;
+  adjective?: Adjective;
+  age?: Age;
+  alignment?: Alignment;
+  aspect?: Aspect;
+  condition?: Condition;
+  disposition?: Disposition;
+  feature?: Feature;
+  npc?: Npc;
+  numAppearing?: NumAppearing;
+  size?: Size;
+  tags: Tag[] = [];
 }
 
 
 export function rollCreature(roll: number = random(1, 12), subroll: number = random(1, 12), specificroll: number = random(1, 12)) {
-  let creature = new Creature(roll, subroll, specificroll);
   if (roll <= 4) {
     return rollBeast(roll, subroll, specificroll);
   } else if (roll <= 6) {
-    creature.type = "human";
-    let npc = rollNpc();
-    creature.description = `${npc.name} the ${npc.gender} ${npc.occupation.subcategory} from ${npc.hometown}`;
-    creature.details = [
-      rollActivity().description,
-      rollAlignment().description,
-      rollDisposition().description,
-      rollNumAppearing().description,
-      npc.name /* TODO: figure out how to do this */
-    ];
+    let human = new Creature(roll, subroll, specificroll);
+    human.type = "human";
+    human.npc = rollNpc();
+    human.description = human.npc.getDescription(true);
+    human.activity = rollActivity();
+    human.alignment = rollAlignment();
+    human.disposition = rollDisposition();
+    human.numAppearing = rollNumAppearing();
+
+    return human;
   } else if (roll <= 8) {
     return rollHumanoid(roll, subroll, specificroll);
   } else if (roll <= 12) {
     return rollMonster();
   }
 
-  return creature;
+  return new Creature(roll, subroll, specificroll);
 }
 
 export function rollBeast(roll: number = random(1, 12), subroll: number = random(1, 12), specificroll: number = random(1, 12)): Creature {
   let creature = new Creature(roll, subroll, specificroll);
 
   creature.type = "beast";
-  creature.details = [
-    rollActivity().description,
-    rollDisposition().description,
-    rollNumAppearing().description,
-    rollSize().description
-  ];
+  creature.activity = rollActivity();
+  creature.disposition = rollDisposition();
+  creature.numAppearing = rollNumAppearing();
+  creature.size = rollSize();
 
   if (subroll <= 7) {
     creature.subtype = "earthbound";
@@ -113,13 +123,11 @@ export function rollWaterGoingBeast(roll: number = random(1, 12)): string {
 export function rollHumanoid(roll: number = random(1, 12), subroll: number = random(1, 12), specificroll: number = random(1, 12)): Creature {
   let creature = new Creature(roll, subroll, specificroll, "humanoid");
 
-  creature.details = [
-    rollActivity().description,
-    rollAlignment().description,
-    rollDisposition().description,
-    rollNumAppearing().description,
-    rollNpc().name /* figure out how to do this */
-  ];
+  creature.activity = rollActivity();
+  creature.alignment = rollAlignment();
+  creature.disposition = rollDisposition();
+  creature.numAppearing = rollNumAppearing();
+  creature.npc = rollNpc(); /* figure out how to do this */
 
   if (subroll <= 7) {
     creature.subtype = "common";
@@ -190,13 +198,12 @@ export function rollHybridHumanoid(roll: number = random(1, 12)): string {
 
 export function rollMonster(roll: number = random(1, 12), subroll: number = random(1, 12), specificroll: number = random(1, 12)): Creature {
   let creature = new Creature(roll, subroll, specificroll, "monster");
-  creature.details = [
-    rollActivity().description,
-    rollAlignment().description,
-    rollDisposition().description,
-    rollNumAppearing().description,
-    rollSize().description,
-  ];
+
+  creature.activity = rollActivity();
+  creature.alignment = rollAlignment();
+  creature.disposition = rollDisposition();
+  creature.numAppearing = rollNumAppearing();
+  creature.size = rollSize();
 
   if (subroll <= 7) {
     creature.subtype = "unusual";
@@ -258,45 +265,3 @@ export function rollLegendaryMonster(roll: number = random(1, 12)): string {
 
   return "";
 }
-
-
-// MONSTER. Give every monster life!			
-
-// I
-// 'V
-// 48
-// 		UNUSUAL		......
-// 1-3	
-// 	4-6	
-// 	7-9	
-// 	10-12	Truai. ENTI
-// 	9-10			
-// 		
-// ASK THE FATES
-// LREATURE
-// Roll 1d12 for creature type if it hasn't already been established, then 1d12 on indicat-
-// ed subtable for specific prompt. Roll additional details as indicated, and/or at whim.
-// 1d12 QmATuRE Aim'rtoi.. DETAILS (see pages 50-53)
-// 1-4 BEAST	ACTIVITY, DISPOSITION, No. APPEARING, SIZE
-// 5-6 Human	ACTIVITY, ALIGNMENT, DISPOSITION, No. APPEARING, NPC tables
-// 7-8 HUMANOID ACTIVITY, ALIGNMENT, DISPOSITION, No. APPEARING, NPC tables 942 MONSTER ACTIVITY, ALIGNMENT, DISPOSITION, No. APPEARING, SIZE
-// Optional: ABILITY, ADJECTIVE, AGE, ASPECT, CONDITION, FEATURE, TAGS
-
-// HUMANOID . If you roll a classic fantasy species, adapt it to your setting. 1-7 COMMON	8-10 UNCOMMON	11-12 HYBRID
-
-// MONSTER. Give every monster life!
-// 1-7	UNUSUAL
-// 1-3	plant/fungus
-// 4-5	Undead Human
-// 6	Undead HUMANOID
-// 7-8	BEAST + BEAST
-// 9-10	BEAST + ABILITY
-// 1142	BEAST + FEATURE
-// 8T10..	RARE	11-12
-// 1-3	slime/ooze (4morphous)	1-3
-// 4-6	creation (Construct)	4-6
-// 7-9	BEAST + ODDITY	7-9
-// 10-12	UNNxrua1. ENTITY	10
-// 		II
-// 		12
-// LEGENDARY

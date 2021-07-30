@@ -1,4 +1,5 @@
-import { random, sample } from 'lodash';
+import { capitalize, random, sample } from 'lodash';
+import { Activity, Alignment, rollActivity, rollAlignment } from './details';
 import { Follower, rollFollower } from './followers';
 import { kingdoms, rollKingdom } from './kingdoms';
 
@@ -7,11 +8,18 @@ export class Npc {
 
   gender: "male" | "female";
   hometown: string;
-
   context: Context;
   occupation: Occupation
   trait: Trait;
   follower: Follower;
+
+  getDescription(fullDesc: boolean = false) {
+    let str = `${this.name} the ${this.gender} ${capitalize(this.occupation.category)} (${this.occupation.description})`;
+    str += fullDesc ? ` from ${this.hometown}` : '';
+
+    return str;
+  }
+
 }
 
 export function rollNpc(): Npc {
@@ -31,7 +39,10 @@ export function rollNpc(): Npc {
 }
 
 export class Context {
-  constructor(public roll: number = 0, public subroll: number = 0, public category: string = "", public subcategory: string = "") { };
+  constructor(public roll: number = 0, public subroll: number = 0, public category: string = "", public description: string = "") { };
+  activity?: Activity;
+  alignment?: Alignment;
+  trait?: Trait;
 }
 
 export function rollContext(): Context {
@@ -40,71 +51,74 @@ export function rollContext(): Context {
   let context = new Context(roll, subroll);
   if (roll <= 3) {
     context.category = "wilderness";
-    context.subcategory = rollWildernessNpc(subroll);
+    context.description = rollWildernessNpc(subroll);
   } else if (roll <= 9) {
     context.category = "rural";
-    context.subcategory = rollRuralNpc(subroll);
+    context.description = rollRuralNpc(subroll);
   } else if (roll <= 12) {
     context.category = "urban";
-    context.subcategory = rollUrbanNpc(subroll);
+    context.description = rollUrbanNpc(subroll);
   }
+  context.activity = rollActivity();
+  context.alignment = rollAlignment();
+  context.trait = rollTrait();
 
   return context;
 }
 
 export function rollWildernessNpc(roll: number = random(1, 12)): string {
   return [
-    `${rollCriminal()} -4`,
-    `${rollCriminal()} -4`,
-    "adventurer/explorer",
-    "adventurer/explorer",
-    "hunter/gatherer",
-    "hunter/gatherer",
-    rollCommoner(),
-    rollCommoner(),
-    "ranger/scout",
-    "ranger/scout",
-    "soldier/mercenary",
-    rollOfficial(),
+    `criminal ${rollCriminal()} -4`,
+    `criminal ${rollCriminal()} -4`,
+    "adventurer",
+    "explorer",
+    "hunter",
+    "gatherer",
+    `commoner ${rollCommoner()}`,
+    `commoner ${rollCommoner()}`,
+    "ranger",
+    "scout",
+    sample(["soldier", "mercenary"]),
+    `official ${rollOfficial()}`,
   ][roll - 1];
 }
 
 export function rollRuralNpc(roll: number = random(1, 12)): string {
   return [
-    "beggar/urchin",
-    `${rollCriminal()} -1`,
-    "adventurer/explorer",
-    "hunter/gatherer",
-    rollCommoner(),
-    rollCommoner(),
-    rollCommoner(),
-    rollCommoner(),
-    rollTradeperson(),
-    `${rollMerchant()} -1`,
-    "militia/soldier/guard",
-    rollOfficial(),
+    sample(["beggar", "urchin"]),
+    `criminal ${rollCriminal()} -1`,
+    sample(["adventurer", "explorer"]),
+    sample(["hunter", "gatherer"]),
+    `commoner ${rollCommoner()}`,
+    `commoner ${rollCommoner()}`,
+    `commoner ${rollCommoner()}`,
+    `commoner ${rollCommoner()}`,
+    `tradeperson ${rollTradeperson()}`,
+    `merchant ${rollMerchant()} -1`,
+    sample(["militia", "soldier", "guard"]),
+    `official ${rollOfficial()}`,
   ][roll - 1];
 }
 
 export function rollUrbanNpc(roll: number = random(1, 12)): string {
   return [
-    "beggar/urchin",
-    "beggar/urchin",
-    rollCriminal(),
-    rollCommoner(),
-    rollCommoner(),
-    rollCommoner(),
-    rollCommoner(),
-    rollTradeperson(),
-    rollMerchant(),
-    rollSpecialist(),
-    "militia/soldier/guard",
-    rollOfficial(),
+    "beggar",
+    "urchin",
+    `commoner ${rollCriminal()}`,
+    `commoner ${rollCommoner()}`,
+    `commoner ${rollCommoner()}`,
+    `commoner ${rollCommoner()}`,
+    `commoner ${rollCommoner()}`,
+    `tradeperson ${rollTradeperson()}`,
+    `merchant ${rollMerchant()}`,
+    `specialist ${rollSpecialist()}`,
+    sample(["militia", "soldier", "guard"]),
+    `official ${rollOfficial()}`,
   ][roll - 1];
 }
 
 export class Occupation {
-  constructor(public roll: number = 0, public subroll: number = 0, public category: string = "", public subcategory: string = "") { };
+  constructor(public roll: number = 0, public subroll: number = 0, public category: string = "", public description: string = "") { };
 }
 
 export function rollOccupation(roll: number = random(1, 12), subroll: number = random(1, 12)): Occupation {
@@ -112,22 +126,22 @@ export function rollOccupation(roll: number = random(1, 12), subroll: number = r
   let occupation = new Occupation(roll, subroll);
   if (roll <= 1) {
     occupation.category = "criminal";
-    occupation.subcategory = rollCriminal(subroll);
+    occupation.description = rollCriminal(subroll);
   } else if (roll <= 6) {
     occupation.category = "commoner";
-    occupation.subcategory = rollCommoner(subroll);
+    occupation.description = rollCommoner(subroll);
   } else if (roll <= 8) {
     occupation.category = "tradeperson";
-    occupation.subcategory = rollTradeperson(subroll);
+    occupation.description = rollTradeperson(subroll);
   } else if (roll <= 10) {
     occupation.category = "merchant";
-    occupation.subcategory = rollMerchant(subroll);
+    occupation.description = rollMerchant(subroll);
   } else if (roll <= 11) {
     occupation.category = "specialist";
-    occupation.subcategory = rollSpecialist(subroll);
+    occupation.description = rollSpecialist(subroll);
   } else if (roll <= 12) {
-    occupation.category = "officiail";
-    occupation.subcategory = rollOfficial(subroll);
+    occupation.category = "official";
+    occupation.description = rollOfficial(subroll);
   }
 
   return occupation;
@@ -135,15 +149,15 @@ export function rollOccupation(roll: number = random(1, 12), subroll: number = r
 
 function rollCriminal(roll: number = random(1, 12)): string {
   return [
-    "bandit/brigand/thug",
-    "bandit/brigand/thug",
+    sample(["bandit", "brigand", "thug"]),
+    sample(["bandit", "brigand", "thug"]),
     "thief",
     "thief",
-    "bodyguard/tough",
-    "bodyguard/tough",
+    "bodyguard",
+    "tough",
     "burglar",
     "burglar",
-    "dealer/fence",
+    sample(["dealer", "fence"]),
     "racketeer",
     "lieutenant",
     "boss"
@@ -153,66 +167,66 @@ function rollCriminal(roll: number = random(1, 12)): string {
 function rollCommoner(roll: number = random(1, 12)): string {
   return [
     "housewife/husband",
-    "hunter/gatherer",
-    "hunter/gatherer",
-    "farmer/herder",
-    "farmer/herder",
-    "farmer/herder",
-    "laborer/servant",
-    "laborer/servant",
-    "driver/porter/guide",
-    "sailor/soldier/guard",
-    "clergy/monk",
-    "apprentice/adventurer"
+    "hunter",
+    "gatherer",
+    "farmer",
+    "herder",
+    sample(["farmer", "herder"]),
+    "laborer",
+    "servant",
+    sample(["driver", "porter", "guide"]),
+    sample(["sailor", "soldier", "guard"]),
+    sample(["clergy", "monk"]),
+    sample(["apprentice", "adventurer"]),
   ][roll - 1];
 }
 
 function rollTradeperson(roll: number = random(1, 12)): string {
   return [
-    "cobbler/furrier/tailor",
-    "weaver/basketmaker",
-    "potter/carpenter",
-    "mason/baker/chandler",
-    "cooper/wheelwright",
-    "tanner/ropemaker",
-    "smith/tinker",
-    "stablekeeper/herbalist",
-    "vintner/jeweler",
-    "inkeeper/tavernkeeper",
-    "artist/actor/minstrel",
-    "armorer/weaponsmith",
+    sample(["cobbler", "furrier", "tailor"]),
+    sample(["weaver", "basketmaker"]),
+    sample(["potter", "carpenter"]),
+    sample(["mason", "baker", "chandler"]),
+    sample(["cooper", "wheelwright"]),
+    sample(["tanner", "ropemaker"]),
+    sample(["smith", "tinker"]),
+    sample(["stablekeeper", "herbalist"]),
+    sample(["vintner", "jeweler"]),
+    sample(["inkeeper", "tavernkeeper"]),
+    sample(["artist", "actor", "minstrel"]),
+    sample(["armorer", "weaponsmith"]),
   ][roll - 1];
 }
 
 function rollMerchant(roll: number = random(1, 12)): string {
   return [
-    "general goods/outfitter",
-    "general goods/outfitter",
-    "general goods/outfitter",
+    "general goods",
+    "outfitter",
+    sample(["general goods", "outfitter"]),
     "raw materials",
-    "grain/livestock",
-    "ale/wine/spirits",
-    "clothing/jewelry",
-    "weapons/armor",
-    "spices/tobacco",
-    "labor/slaves",
-    "books/scrolls",
-    "magic supplies/items"
+    sample(["grain", "livestock"]),
+    sample(["ale", "wine", "spirits"]),
+    sample(["clothing", "jewelry"]),
+    sample(["weapons", "armor"]),
+    sample(["spices", "tobacco"]),
+    sample(["labor", "slaves"]),
+    sample(["books", "scrolls"]),
+    sample(["magic supplies", "magic items"]),
   ][roll - 1];
 }
 
 function rollSpecialist(roll: number = random(1, 12)): string {
   return [
     "undertaker",
-    "sage/scholar/wizard",
-    "writer/illuminator",
+    sample(["sage", "scholar", "wizard"]),
+    sample(["writer", "illuminator"]),
     "perfumer",
-    "architect/engineer",
-    "locksmith/clockmaker",
-    "physician/apothecary",
-    "navigator/guide",
-    "alchemist/astrologer",
-    "spy/diplomat",
+    sample(["architect", "engineer"]),
+    sample(["locksmith", "clockmaker"]),
+    sample(["physician", "apothecary"]),
+    sample(["navigator", "guide"]),
+    sample(["alchemist", "astrologer"]),
+    sample(["spy", "diplomat"]),
     "cartographer",
     "inventor"
   ][roll - 1];
@@ -222,16 +236,16 @@ function rollOfficial(roll: number = random(1, 12)): string {
   return [
     "town crier",
     "tax collector",
-    "armiger/gentry",
-    "armiger/gentry",
-    "reeve/sheriff/constable",
-    "mayor/magistrate",
-    "priest/bishop/abbot",
+    "armiger",
+    "gentry",
+    sample(["reeve", "sheriff", "constable"]),
+    sample(["mayor", "magistrate"]),
+    sample(["priest", "bishop", "abbot"]),
     "guildmaster",
     "knightltemplar",
-    "elder/high priest",
+    sample(["elder", "high priest"]),
     "noble (baron, etc.)",
-    "lord/lady/king/queen",
+    sample(["lord", "lady", "king", "queen"]),
   ][roll - 1];
 }
 
@@ -259,15 +273,15 @@ function rollAppearance(roll: number = random(1, 12)): string {
   let appearance = [
     "disfigured (missing teeth, eye, etc.)",
     "lasting injury (bad leg, arm, etc.)",
-    "tattooed/pockmarked/scarred",
-    "unkempt/shabby/grubby",
-    "big/thick/brawny",
-    "small/scrawny/emaciated",
+    sample(["tattooed", "pockmarked", "scarred"]),
+    sample(["unkempt", "shabby", "grubby"]),
+    sample(["big", "thick", "brawny"]),
+    sample(["small", "scrawny", "emaciated"]),
     "notable hair (wild, long, none, etc.)",
     "notable nose (big, hooked, etc.)",
     "notable eyes (blue, bloodshot, etc.)",
-    "clean/well-dressed/well-groomed",
-    "attractive/handsome/stunning",
+    sample(["clean", "well-dressed", "well-groomed"]),
+    sample(["attractive", "handsome", "stunning"]),
     "they are [APPEARANCE] despite [a contradictory detail of your choice]"
   ][roll - 1];
 
@@ -276,17 +290,17 @@ function rollAppearance(roll: number = random(1, 12)): string {
 
 export function rollPersonality(roll: number = random(1, 12)): string {
   let personality = [
-    "loner/alienated/antisocial",
-    "cruel/belligerent/bully",
-    "anxious/fearful/cowardly",
-    "envious/covetous/greedy",
-    "aloof/haughty/arrogant",
-    "awkward/shy/self-loathing",
-    "orderly/compulsive/controlling",
-    "confident/impulsive/reckless",
-    "kind/generous/compassionate",
-    "easygoing/relaxed/peaceful",
-    "cheerful/happy/optimistic",
+    sample(["loner", "alienated", "antisocial"]),
+    sample(["cruel", "belligerent", "bully"]),
+    sample(["anxious", "fearful", "cowardly"]),
+    sample(["envious", "covetous", "greedy"]),
+    sample(["aloof", "haughty", "arrogant"]),
+    sample(["awkward", "shy", "self-loathing"]),
+    sample(["orderly", "compulsive", "controlling"]),
+    sample(["confident", "impulsive", "reckless"]),
+    sample(["kind", "generous", "compassionate"]),
+    sample(["easygoing", "relaxed", "peaceful"]),
+    sample(["cheerful", "happy", "optimistic"]),
     "they are [PERSONALITY] despite [a contradictory detail of your choice]",
   ][roll - 1];
 
@@ -295,17 +309,17 @@ export function rollPersonality(roll: number = random(1, 12)): string {
 
 export function rollQuirk(roll: number = random(1, 12)): string {
   let quirk = [
-    "insecure/racist/xenophobic",
-    "addict (sweets, drugs, sex, etc.)",
-    "phobia (spiders, fire, darkness, etc.)",
-    "allergic/asthmatic/chronically ill",
-    "skeptic/paranoid",
-    "superstitious/devout/fanatical",
-    "miser/pack-rat",
-    "spendthrift/wastrel",
-    "smart aleck/know-it-all",
-    "artistic/dreamer/delusional",
-    "naive/idealistic",
+    sample(["insecure", "racist", "xenophobic"]),
+    sample(["addict (sweets, drugs, sex, etc.)"]),
+    sample(["phobia (spiders, fire, darkness, etc.)"]),
+    sample(["allergic", "asthmatic", "chronically ill"]),
+    sample(["skeptic", "paranoid"]),
+    sample(["superstitious", "devout", "fanatical"]),
+    sample(["miser", "pack-rat"]),
+    sample(["spendthrift", "wastrel"]),
+    sample(["smart aleck", "know-it-all"]),
+    sample(["artistic", "dreamer", "delusional"]),
+    sample(["naive", "idealistic"]),
     "they are [QUIRK] despite [a contradictory detail of your choice]",
   ][roll - 1];
 

@@ -1,4 +1,4 @@
-import { random } from 'lodash';
+import { random, sample } from 'lodash';
 
 export class Kingdom {
   constructor(public description: string = "", public subtitle: string = "") { };
@@ -52,4 +52,11 @@ export function rollKingdom(roll: number = random(1, 4)): Kingdom {
   let key = Object.keys(kingdoms)[roll - 1];
 
   return kingdoms[key];
+}
+
+export function rollCategory(kingdom: string = "", category: string = ""): string {
+  if (kingdoms[kingdom] && kingdoms[kingdom][category]) {
+    return sample(kingdoms[kingdom][category]);
+  }
+  return "";
 }

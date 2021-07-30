@@ -1,14 +1,23 @@
 import { random, sample } from 'lodash';
 import { Creature, rollCreature } from './creatures';
-import { rollAlignment, rollElement, rollMagicType, rollOddity, rollTerrain } from './details';
+import { Age, Alignment, Aspect, Element, MagicType, rollAge, rollAlignment, rollAspect, rollElement, rollMagicType, rollOddity, rollRuination, rollSize, rollTerrain, rollVisibility, Ruination, Size, Visibility } from './details';
 import { rollDungeon } from './dungeons';
 import { rollSteading, Steading } from './steadings';
 import { rollTreasure } from './treasures';
 
 export class Discovery {
   constructor(public roll: number = 0, public subroll: number = 0, public specificroll: number = 0, public category: string = "", public subcategory: string = "", public description: string = "") { };
+
+  age?: Age;
+  alignment?: Alignment;
+  aspect?: Aspect;
   creature?: Creature;
+  element?: Element;
+  magicType?: MagicType;
+  ruination?: Ruination;
+  size?: Size;
   steading?: Steading;
+  visibility?: Visibility;
 }
 
 export function rollDiscovery() {
@@ -37,12 +46,18 @@ export function rollUnnaturalFeature(roll: number = random(1, 12), subroll: numb
   if (subroll <= 9) {
     discovery.subcategory = "arcane";
     discovery.description = rollArcaneFeature(specificroll);
+    discovery.alignment = rollAlignment();
+    discovery.magicType = rollMagicType();
   } else if (subroll <= 11) {
     discovery.subcategory = "planar";
     discovery.description = rollPlanarFeature(specificroll);
+    discovery.alignment = rollAlignment();
+    discovery.element = rollElement();
   } else if (subroll <= 12) {
     discovery.subcategory = "divine";
     discovery.description = rollDivineFeature(specificroll);
+    discovery.alignment = rollAlignment();
+    discovery.aspect = rollAspect();
   }
 
   return discovery;
@@ -107,7 +122,9 @@ export function rollNaturalFeature(roll: number = random(1, 12), subroll: number
 
   if (subroll <= 2) {
     discovery.subcategory = "lair";
-    discovery.description = rollLair(specificroll)
+    discovery.description = rollLair(specificroll);
+    discovery.creature = rollCreature();
+    discovery.visibility = rollVisibility();
   } else if (subroll <= 4) {
     discovery.subcategory = "obstacle";
     discovery.description = rollObstacle(specificroll);
@@ -121,8 +138,10 @@ export function rollNaturalFeature(roll: number = random(1, 12), subroll: number
     discovery.subcategory = "terrain change";
     discovery.description = rollLandmark(specificroll);
   } else if (subroll <= 12) {
-    discovery.subcategory = "terrain change";
+    discovery.subcategory = "resource";
     discovery.description = rollResource(specificroll);
+    discovery.size = rollSize();
+    discovery.visibility = rollVisibility();
   }
 
   return discovery;
@@ -148,9 +167,9 @@ export function rollObstacle(roll: number = random(1, 12)): string {
   if (roll <= 5) {
     return "difficult ground";
   } else if (roll <= 8) {
-    return "cliff/crevasse/chasm";
+    return sample(["cliff", "crevasse", "chasm"]);
   } else if (roll <= 10) {
-    return "ravine/gorge";
+    return sample(["ravine", "gorge"]);
   } else if (roll <= 12) {
     return rollOddity().description;
   }
@@ -160,15 +179,15 @@ export function rollObstacle(roll: number = random(1, 12)): string {
 
 export function rollTerrainChange(roll: number = random(1, 12)): string {
   if (roll <= 4) {
-    return `limited area of ${rollTerrain()}`;
+    return `limited area of ${rollTerrain().description}`;
   } else if (roll <= 6) {
-    return "crevice/hole/pit/cave";
+    return sample(["crevice", "hole", "pit", "cave"]);
   } else if (roll <= 8) {
     return "altitude change";
   } else if (roll <= 10) {
-    return "canyon/valley";
+    return sample(["canyon", "valley"]);
   } else if (roll <= 12) {
-    return "rise/peak in distance";
+    return sample(["rise", "peak in distance"]);
   }
 
   return "";
@@ -176,17 +195,17 @@ export function rollTerrainChange(roll: number = random(1, 12)): string {
 
 export function rollWaterFeature(roll: number = random(1, 12)): string {
   if (roll <= 1) {
-    return "spring/hotspring";
+    return sample(["spring", "hotspring"]);
   } else if (roll <= 2) {
-    return "waterfall/geyser";
+    return sample(["waterfall", "geyser"]);
   } else if (roll <= 6) {
-    return "creek/stream/brook";
+    return sample(["creek", "stream", "brook"]);
   } else if (roll <= 8) {
-    return "pond/lake";
+    return sample(["pond", "lake"]);
   } else if (roll <= 10) {
     return "river";
   } else if (roll <= 12) {
-    return "sea/ocean";
+    return sample(["sea", "ocean"]);
   }
 
   return "";
@@ -208,15 +227,15 @@ export function rollLandmark(roll: number = random(1, 12)): string {
 
 export function rollResource(roll: number = random(1, 12)): string {
   if (roll <= 4) {
-    return "game/fruit/vegetable";
+    return sample(["game", "fruit", "vegetable"]);
   } else if (roll <= 6) {
-    return "herb/spice/dye source";
+    return sample(["herb", "spice", "dye source"]);
   } else if (roll <= 9) {
-    return "timber/stone";
+    return sample(["timber", "stone"]);
   } else if (roll <= 11) {
-    return "ore (copper, iron, etc.)";
+    return sample(["copper ore", "iron ore", "tin ore", "silver ore"]);
   } else if (roll <= 12) {
-    return "precious metal/gems";
+    return sample(["precious metal", "precious gems"]);
   }
 
   return "";
@@ -228,9 +247,13 @@ function rollEvidence(roll: number = random(1, 12), subroll: number = random(1, 
   if (subroll <= 6) {
     discovery.subcategory = "tracks/spoor";
     discovery.description = rollTracksSpoor(specificroll);
+    discovery.age = rollAge();
+    discovery.creature = rollCreature();
   } else if (subroll <= 10) {
     discovery.subcategory = "remains/debris";
     discovery.description = rollRemainsDebris(specificroll);
+    discovery.age = rollAge();
+    discovery.visibility = rollVisibility();
   } else if (subroll <= 12) {
     discovery.subcategory = "stash/cache";
     discovery.description = rollStashCache(specificroll);
@@ -305,15 +328,23 @@ export function rollStructure(roll: number = random(1, 12), subroll: number = ra
   if (subroll <= 1) {
     discovery.subcategory = "enigmatic";
     discovery.description = rollEnigmaticStructure(specificroll);
+    discovery.age = rollAge(random(1, 8) + 4);
+    discovery.size = rollSize(random(1, 8) + 4);
+    discovery.visibility = rollVisibility();
   } else if (subroll <= 3) {
     discovery.subcategory = "infrastructure";
     discovery.description = rollInfrastructureStructure(specificroll);
+    discovery.creature = rollCreature(random(1, 4) + 4);
   } else if (subroll <= 4) {
     discovery.subcategory = "dwelling";
     discovery.description = rollDwellingStructure(specificroll);
+    discovery.creature = rollCreature(random(1, 4) + 4);
   } else if (subroll <= 6) {
     discovery.subcategory = "burial/religious";
     discovery.description = rollBurialReligiousStructure(specificroll);
+    discovery.creature = rollCreature(random(1, 4) + 4);
+    discovery.alignment = rollAlignment();
+    discovery.aspect = rollAspect();
   } else if (subroll <= 8) {
     discovery.subcategory = "steading";
     discovery.steading = rollSteading();
@@ -322,6 +353,10 @@ export function rollStructure(roll: number = random(1, 12), subroll: number = ra
   } else if (subroll <= 12) {
     discovery.subcategory = "ruin";
     discovery.description = rollRuinStructure(specificroll);
+    discovery.creature = rollCreature(random(1, 4) + 4);
+    discovery.age = rollAge(random(1, 8) + 4);
+    discovery.ruination = rollRuination();
+    discovery.visibility = rollVisibility();
   }
 
   return discovery;
@@ -343,15 +378,15 @@ export function rollEnigmaticStructure(roll: number = random(1, 12)): string {
 
 export function rollInfrastructureStructure(roll: number = random(1, 12)): string {
   if (roll <= 4) {
-    return "track/path";
+    return sample(["track", "path"]);
   } else if (roll <= 8) {
     return "road";
   } else if (roll <= 10) {
-    return "bridge/ford";
+    return sample(["bridge", "ford"]);
   } else if (roll <= 11) {
-    return "mine/quarry";
+    return sample(["mine", "quarry"]);
   } else if (roll <= 12) {
-    return "aqueduct/canal/portal";
+    return sample(["aqueduct", "canal", "portal"]);
   }
 
   return "";
@@ -361,13 +396,13 @@ export function rollDwellingStructure(roll: number = random(1, 12)): string {
   if (roll <= 3) {
     return "campsite";
   } else if (roll <= 6) {
-    return "hovel/hut";
+    return sample(["hovel", "hut"]);
   } else if (roll <= 8) {
     return "farm";
   } else if (roll <= 10) {
-    return "inn/roadhouse";
+    return sample(["inn", "roadhouse"]);
   } else if (roll <= 12) {
-    return "tower/keep/estate";
+    return sample(["tower", "keep", "estate"]);
   }
 
   return "";
@@ -375,15 +410,15 @@ export function rollDwellingStructure(roll: number = random(1, 12)): string {
 
 export function rollBurialReligiousStructure(roll: number = random(1, 12)): string {
   if (roll <= 2) {
-    return "grave marker/barrow";
+    return sample(["grave marker", "grave barrow"]);
   } else if (roll <= 4) {
-    return "graveyard/necropolis";
+    return sample(["graveyard", "necropolis"]);
   } else if (roll <= 6) {
-    return "tomb/crypt";
+    return sample(["tomb", "crypt"]);
   } else if (roll <= 9) {
     return "shrine";
   } else if (roll <= 11) {
-    return "temple/retreat";
+    return sample(["temple", "retreat"]);
   } else if (roll <= 12) {
     return "great temple";
   }

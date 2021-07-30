@@ -1,23 +1,19 @@
 <script lang="ts">
-  import * as _ from "lodash";
+  import { capitalize } from "lodash";
   import { format as formatDate } from "date-fns";
   import { Button, Icon } from "sveltestrap";
 
-  import { kingdoms } from "./kingdoms";
+  import { kingdoms, rollCategory } from "./kingdoms";
 
   let rollResults: { value: string; icon: string; timestamp: string }[] = [];
   let kingdom = "arpad";
   let categories: string[];
 
-  function addResult(value: string, category: string) {
+  function roll(category: string) {
+    let value = rollCategory(kingdom, category);
+
     let icon = { male: "person-fill", female: "person", steading: "house-door-fill", mount: "bicycle" }[category] || "";
     rollResults = [{ value, icon, timestamp: formatDate(new Date(), "P kk:mm:ss") }, ...rollResults];
-  }
-
-  function rollName(category: string) {
-    let values = kingdoms[kingdom][category];
-
-    addResult(_.sample(values), category);
   }
 
   $: categories = kingdoms[kingdom].categories;
@@ -35,12 +31,12 @@
 
   {#each categories as category}
     <span class="btn">
-      <Button color="primary" on:click={() => rollName(category)}>Roll {_.capitalize(category)}</Button>
+      <Button color="primary" on:click={() => roll(category)}>Roll {capitalize(category)}</Button>
     </span>
   {/each}
 
-  {#each rollResults as result}
-    <h4>{result.timestamp}: <Icon name={result.icon} /> {result.value}</h4>
+  {#each rollResults as { value, icon, timestamp }}
+    <h4>{timestamp}: <Icon name={icon} /> {value}</h4>
   {/each}
 </main>
 

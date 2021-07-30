@@ -1,17 +1,19 @@
 import { random, sample } from 'lodash';
+import { Creature, rollCreature } from './creatures';
+import type { Kingdom } from './kingdoms';
 
 export class Steading {
-  constructor(public roll: number = 0, public category: string = "") { };
-  builtBy: string;
-  description: string;
-  kingdom: string;
+  constructor(public roll: number = 0, public category: string = "", public description: string = "") { };
+  builtBy: Creature;
+  kingdom: Kingdom;
   problem: string;
 }
 
-// This section is gonna need a lot of work
+// TODO: This section is gonna need a lot of work
 export function rollSteading(roll: number = random(1, 12)): Steading {
   let steading = new Steading();
-  // STEADING Choose or roll 1d4 + 4 on the first CREATURE table(page 49) to see who builtit.
+  steading.builtBy = rollCreature(random(1, 4) + 4);
+
   if (roll <= 5) {
     steading = rollVillage();
   } else if (roll <= 8) {
@@ -28,19 +30,19 @@ export function rollSteading(roll: number = random(1, 12)): Steading {
 
 
 export function rollVillage(): Steading {
-  return new Steading(0, "village");
+  return new Steading(0, "village", "village");
 }
 
 export function rollTown(): Steading {
-  return new Steading(0, "town");
+  return new Steading(0, "town", "town");
 }
 
 export function rollKeep(): Steading {
-  return new Steading(0, "keep");
+  return new Steading(0, "keep", "keep");
 }
 
 export function rollCity(): Steading {
-  return new Steading(0, "city");
+  return new Steading(0, "city", "city");
 }
 
 

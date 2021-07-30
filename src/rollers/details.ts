@@ -8,17 +8,17 @@ export class Ability {
 export function rollAbility(roll: number = random(1, 12)): Ability {
   let ability = new Ability(roll);
   ability.description = [
-    "bless/curse",
-    "entangle/trap/snare",
-    "poison/disease",
-    "paralyze/petrify",
-    "mimic/camouflage",
-    "seduce/hypnotize",
-    "dissolve/disintegrate",
+    sample(["bless", "curse"]),
+    sample(["entangle", "trap", "snare"]),
+    sample(["poison", "disease"]),
+    sample(["paralyze", "petrify"]),
+    sample(["mimic", "camouflage"]),
+    sample(["seduce", "hypnotize"]),
+    sample(["dissolve", "disintegrate"]),
     rollMagicType().description,
-    "drain life/magic",
+    sample(["drain life", "drain magic"]),
     `immunity to ${rollElement().description}`,
-    "read/control minds",
+    sample(["read minds", "control minds"]),
     "[ABILITY] and [ABILITY]"
   ][roll - 1];
   ability.description = replace(ability.description, /\[ABILITY\]/g, () => rollAbility(random(1, 11)).description);
@@ -34,16 +34,16 @@ export class Activity {
 export function rollActivity(roll: number = random(1, 12)): Activity {
   let activity = new Activity(roll);
   activity.description = [
-    "laying trap/ambush",
-    "fighting/at war",
-    "prowling/on patrol",
-    "hunting/foraging",
-    "eating/resting",
-    "crafting/praying",
-    "traveling/relocating",
-    "exploring/lost",
+    sample(["laying trap", "ambush"]),
+    sample(["fighting", "at war"]),
+    sample(["prowling", "on patrol"]),
+    sample(["hunting", "foraging"]),
+    sample(["eating", "resting"]),
+    sample(["crafting", "praying"]),
+    sample(["traveling", "relocating"]),
+    sample(["exploring", "lost"]),
     "returning home",
-    "building/excavating",
+    sample(["building", "excavating"]),
     "sleeping",
     "dying",
   ][roll - 1];
@@ -59,17 +59,17 @@ export class Adjective {
 export function rollAdjective(roll: number = random(1, 12)): Adjective {
   let adjective = new Adjective(roll);
   adjective.description = [
-    "slick/slimy",
-    "rough/hard/sharp",
-    "smooth/soft/dull",
-    "corroded/rusty",
-    "rotten/decaying",
-    "broken/brittle",
-    "stinking/smelly",
-    "weak/thin/drained",
-    "strong/fat/full",
-    "pale/poor/shallow",
-    "dark/rich/deep",
+    sample(["slick", "slimy"]),
+    sample(["rough", "hard", "sharp"]),
+    sample(["smooth", "soft", "dull"]),
+    sample(["corroded", "rusty"]),
+    sample(["rotten", "decaying"]),
+    sample(["broken", "brittle"]),
+    sample(["stinking", "smelly"]),
+    sample(["weak", "thin", "drained"]),
+    sample(["strong", "fat", "full"]),
+    sample(["pale", "poor", "shallow"]),
+    sample(["dark", "rich", "deep"]),
     "colorful",
   ][roll - 1];
 
@@ -132,16 +132,16 @@ export class Aspect {
 export function rollAspect(roll: number = random(1, 12)): Aspect {
   let aspect = new Aspect(roll);
   aspect.description = [
-    "power/strength",
-    "trickery/dexterity",
-    "time/constitution",
-    "knowledge/intelligence",
-    "nature/wisdom",
-    "culture/charisma",
-    "war/lies/discord",
-    "peace/truth/balance",
-    "hate/envy",
-    "love/admiration",
+    sample(["power", "strength"]),
+    sample(["trickery", "dexterity"]),
+    sample(["time", "constitution"]),
+    sample(["knowledge", "intelligence"]),
+    sample(["nature", "wisdom"]),
+    sample(["culture", "charisma"]),
+    sample(["war", "lies", "discord"]),
+    sample(["peace", "truth", "balance"]),
+    sample(["hate", "envy"]),
+    sample(["love", "admiration"]),
     rollElement().description,
     "[ASPECT] and [ASPECT]"
   ][roll - 1];
@@ -159,19 +159,19 @@ export function rollCondition(roll: number = random(1, 12)): Condition {
   let condition = new Condition(roll);
 
   if (roll <= 1) {
-    condition.description = "being built/born";
+    condition.description = sample(["being built", "being born"]);
   } else if (roll <= 4) {
-    condition.description = "intact/healthy/stable";
+    condition.description = sample(["intact", "healthy", "stable"]);
   } else if (roll <= 7) {
-    condition.description = "occupied/active/alert";
+    condition.description = sample(["occupied", "active", "alert"]);
   } else if (roll <= 9) {
-    condition.description = "worn/tired/weak";
+    condition.description = sample(["worn", "tired", "weak"]);
   } else if (roll <= 10) {
-    condition.description = "vacant/lost";
+    condition.description = sample(["vacant", "lost"]);
   } else if (roll <= 11) {
-    condition.description = "ruined/defiled/dying";
+    condition.description = sample(["ruined", "defiled", "dying"]);
   } else if (roll <= 12) {
-    condition.description = "disappeared/dead";
+    condition.description = sample(["disappeared", "dead"]);
   }
 
   return condition;
@@ -188,15 +188,15 @@ export function rollDisposition(roll: number = random(1, 12)): Disposition {
   if (roll <= 1) {
     disposition.description = "attacking";
   } else if (roll <= 4) {
-    disposition.description = "hostile/aggressive";
+    disposition.description = sample(["hostile", "aggressive"]);
   } else if (roll <= 6) {
-    disposition.description = "cautious/doubtful";
+    disposition.description = sample(["cautious", "doubtful"]);
   } else if (roll <= 7) {
-    disposition.description = "fearful/fleeing";
+    disposition.description = sample(["fearful", "fleeing"]);
   } else if (roll <= 10) {
     disposition.description = "neutral";
   } else if (roll <= 11) {
-    disposition.description = "curious/hopeful";
+    disposition.description = sample(["curious", "hopeful"]);
   } else if (roll <= 12) {
     disposition.description = "friendly";
   }
@@ -242,13 +242,13 @@ export function rollFeature(roll: number = random(1, 12)): Feature {
   } else if (roll <= 3) {
     feature.description = "winged/flying";
   } else if (roll <= 4) {
-    feature.description = "multiple heads/headless";
+    feature.description = sample(["multiple heads", "headless"]);
   } else if (roll <= 5) {
-    feature.description = "many eyes/one eye";
+    feature.description = sample(["many eyes", "one eye"]);
   } else if (roll <= 6) {
-    feature.description = "many limbs/tails";
+    feature.description = sample(["many limbs", "tails"]);
   } else if (roll <= 7) {
-    feature.description = "tentacles/tendrils";
+    feature.description = sample(["tentacles", "tendrils"]);
   } else if (roll <= 8) {
     feature.description = rollAspect().description;
   } else if (roll <= 9) {
@@ -317,15 +317,15 @@ export class Oddity {
 export function rollOddity(roll: number = random(1, 12)): Oddity {
   let oddity = new Oddity(roll);
   oddity.description = [
-    "weird color/smell/sound",
+    sample(["weird color", "smell", "sound"]),
     "geometric",
-    "web/network/system",
-    "crystalline/glass-like",
+    sample(["web", "network", "system"]),
+    sample(["crystalline", "glass-like"]),
     "fungal",
-    "gaseous/smokey",
-    "mirage/illusion",
-    "volcanic/explosive",
-    "magnetic/repellant",
+    sample(["gaseous", "smokey"]),
+    sample(["mirage", "illusion"]),
+    sample(["volcanic", "explosive"]),
+    sample(["magnetic", "repellant"]),
     "devoid of life",
     "unexpectedly alive",
     "[ODDITY] and [ODDITY]",
@@ -379,15 +379,15 @@ export function rollRuination(roll: number = random(1, 12)): Ruination {
   if (roll <= 1) {
     ruination.description = "arcane disaster";
   } else if (roll <= 2) {
-    ruination.description = "damnation/curse";
+    ruination.description = sample(["damnation", "curse"]);
   } else if (roll <= 4) {
-    ruination.description = "earthquake/fire/flood";
+    ruination.description = sample(["earthquake", "fire", "flood"]);
   } else if (roll <= 6) {
-    ruination.description = "plague/famine/drought";
+    ruination.description = sample(["plague", "famine", "drought"]);
   } else if (roll <= 8) {
     ruination.description = "overrun by monsters";
   } else if (roll <= 10) {
-    ruination.description = "war/invasion";
+    ruination.description = sample(["war", "invasion"]);
   } else if (roll <= 11) {
     ruination.description = "depleted resources";
   } else if (roll <= 12) {
@@ -463,19 +463,19 @@ export function rollTerrain(roll: number = random(1, 12)): Terrain {
   let terrain = new Terrain(roll);
 
   if (roll <= 1) {
-    terrain.description = "wasteland/desert";
+    terrain.description = sample(["wasteland", "desert"]);
   } else if (roll <= 3) {
-    terrain.description = "flatland/plain";
+    terrain.description = sample(["flatland", "plain"]);
   } else if (roll <= 4) {
-    terrain.description = "wetland/marsh/swamp";
+    terrain.description = sample(["wetland", "marsh", "swamp"]);
   } else if (roll <= 7) {
-    terrain.description = "woodland/forest/jungle";
+    terrain.description = sample(["woodland", "forest", "jungle"]);
   } else if (roll <= 9) {
-    terrain.description = "highland/hills";
+    terrain.description = sample(["highland", "hills"]);
   } else if (roll <= 11) {
     terrain.description = "mountains";
   } else if (roll <= 12) {
-    terrain.description = rollOddity().description;
+    terrain.description = `${rollOddity().description} oddity`;
   }
 
   return terrain;
@@ -490,15 +490,15 @@ export function rollVisibility(roll: number = random(1, 12)): Visibility {
   let visibility = new Visibility(roll);
 
   if (roll <= 2) {
-    visibility.description = "buried/camouflaged/nigh invisible";
+    visibility.description = sample(["buried", "camouflaged", "nigh invisible"]);
   } else if (roll <= 6) {
-    visibility.description = "partly covered/overgrown/hidden";
+    visibility.description = sample(["partly covered", "partly overgrown", "partly hidden"]);
   } else if (roll <= 9) {
-    visibility.description = "obvious/in plain sight";
+    visibility.description = sample(["obvious", "in plain sight"]);
   } else if (roll <= 11) {
     visibility.description = "visible at near distance";
   } else if (roll <= 12) {
-    visibility.description = "visible at great distance/focal point";
+    visibility.description = sample(["visible at great distance", "focal point"]);
   }
 
   return visibility;

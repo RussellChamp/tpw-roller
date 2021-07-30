@@ -1,28 +1,23 @@
 <script lang="ts">
-  import * as _ from "lodash";
   import { format as formatDate } from "date-fns";
-  import { places } from "./places";
-  import { bodgeString } from "./utils";
+  import { Button } from "sveltestrap";
+  import { rollPlace } from "./places";
 
-  export let rollResults: { value: string; timestamp: string }[] = [];
-
-  function addResult(result: string) {
-    rollResults = [{ value: result, timestamp: formatDate(new Date(), "P kk:mm:ss") }, ...rollResults];
-  }
+  export let rollResults: { place: string; timestamp: string }[] = [];
 
   function roll(event: Event) {
-    let template = _.sample(places.templates);
-
-    addResult(bodgeString(template, places));
+    let place = rollPlace();
+    rollResults = [{ place, timestamp: formatDate(new Date(), "P kk:mm:ss") }, ...rollResults];
   }
 </script>
 
 <main>
-  <h2>Random Places</h2>
-  <button type="button" class="btn btn-primary" on:click={roll}>Roll Region</button>
+  <span class="btn">
+    <Button color="primary" on:click={roll}>Roll Place</Button>
+  </span>
 
-  {#each rollResults as result}
-    <h4>{result.timestamp}: {result.value}</h4>
+  {#each rollResults as { place, timestamp }}
+    <h4>{timestamp}: {place}</h4>
   {/each}
 </main>
 

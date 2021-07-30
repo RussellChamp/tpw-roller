@@ -1,7 +1,6 @@
 <script lang="ts">
-  import * as _ from "lodash";
   import { format as formatDate } from "date-fns";
-  import { Icon } from "sveltestrap";
+  import { Button, Icon } from "sveltestrap";
   import { Danger, rollDanger } from "./dangers";
 
   export let rollResults: { danger: Danger; icon: string; timestamp: string }[] = [];
@@ -21,12 +20,13 @@
 </script>
 
 <main>
-  <h2>Random Danger</h2>
-  <button type="button" class="btn btn-primary" on:click={roll}>Roll Danger</button>
+  <span class="btn">
+    <Button color="primary" on:click={roll}>Roll Danger</Button>
+  </span>
 
-  {#each rollResults as result}
+  {#each rollResults as { danger, icon, timestamp }}
     <h4>
-      {result.timestamp}: {result.danger.category} ({result.danger.subcategory}) <Icon name={result.icon} />: {result.danger.description}
+      {timestamp}: {danger.category} ({danger.subcategory}) <Icon name={icon} />: {danger.description}
     </h4>
   {/each}
 </main>
