@@ -1,7 +1,7 @@
 <script lang="ts">
   import { format as formatDate } from "date-fns";
   import { Button } from "sveltestrap";
-  import { rollPlace } from "./places";
+  import { rollPlace } from "../rollers/places";
 
   export let rollResults: { place: string; timestamp: string }[] = [];
 

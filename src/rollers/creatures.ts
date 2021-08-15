@@ -5,7 +5,7 @@ import { Ability, Activity, Adjective, Age, Alignment, Aspect, Condition, Dispos
 import { Npc, rollNpc } from './npcs';
 
 export class Creature {
-  constructor(public roll: number = 0, public subroll: number = 0, public specifcroll: number = 0, public type: string = "", public subtype: string = "", public description: string = "") { };
+  constructor(public roll: number = 0, public subroll: number = 0, public specificroll: number = 0, public type: string = "", public subtype: string = "", public description: string = "") { };
 
   ability?: Ability;
   activity?: Activity;

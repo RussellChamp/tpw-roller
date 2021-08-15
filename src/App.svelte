@@ -1,16 +1,17 @@
 <script lang="ts">
   import { Accordion, AccordionHeader, AccordionItem } from "sveltestrap";
-  import CreatureRoller from "./rollers/CreatureRoller.svelte";
-  import DangerRoller from "./rollers/DangerRoller.svelte";
-  import DetailsRoller from "./rollers/DetailsRoller.svelte";
-  import DiscoveryRoller from "./rollers/DiscoveryRoller.svelte";
-  import DungeonRoller from "./rollers/DungeonRoller.svelte";
-  import FollowerRoller from "./rollers/FollowerRoller.svelte";
-  import KingdomRoller from "./rollers/KingdomRoller.svelte";
-  import NpcRoller from "./rollers/NpcRoller.svelte";
-  import PlaceRoller from "./rollers/PlaceRoller.svelte";
-  import RegionRoller from "./rollers/RegionRoller.svelte";
-  import Footer from "./componenets/Footer.svelte";
+
+  import CreatureRoller from "./components/CreatureRoller.svelte";
+  import DangerRoller from "./components/DangerRoller.svelte";
+  import DetailsRoller from "./components/DetailsRoller.svelte";
+  import DiscoveryRoller from "./components/DiscoveryRoller.svelte";
+  import DungeonRoller from "./components/DungeonRoller.svelte";
+  import FollowerRoller from "./components/FollowerRoller.svelte";
+  import KingdomRoller from "./components/KingdomRoller.svelte";
+  import NpcRoller from "./components/NpcRoller.svelte";
+  import PlaceRoller from "./components/PlaceRoller.svelte";
+  import RegionRoller from "./components/RegionRoller.svelte";
+  import Footer from "./components/Footer.svelte";
 </script>
 
 <main>

@@ -21,12 +21,17 @@
     rollTag,
     rollTerrain,
     rollVisibility,
-  } from "./details";
+  } from "../rollers/details";
 
-  let rollResults: { type: string; value: string; timestamp: string }[] = [];
+  import DieIcon from "./DieIcon.svelte";
+
+  let rollResults: { type: string; roll: number; value: string; timestamp: string }[] = [];
 
   function roll(item: { type: string; description: string; roll: number }) {
-    rollResults = [{ type: item.type, value: item.description, timestamp: formatDate(new Date(), "P kk:mm:ss") }, ...rollResults];
+    rollResults = [
+      { type: item.type, roll: item.roll, value: item.description, timestamp: formatDate(new Date(), "P kk:mm:ss") },
+      ...rollResults,
+    ];
   }
 </script>
 
@@ -89,8 +94,8 @@
     <Button color="primary" on:click={() => roll(rollVisibility())}>Roll Visibility</Button>
   </span>
 
-  {#each rollResults as { type, value, timestamp }}
-    <h4>{timestamp}: ({type}): {value}</h4>
+  {#each rollResults as { type, roll, value, timestamp }}
+    <h4>{timestamp}: ({type}): {value}<DieIcon value={roll} /></h4>
   {/each}
 </main>
 
