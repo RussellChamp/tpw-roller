@@ -1,14 +1,17 @@
 <script lang="ts">
   import { format as formatDate } from "date-fns";
+  import { createEventDispatcher } from "svelte";
   import { Button } from "sveltestrap";
   import CreatureCard from "./CreatureCard.svelte";
   import { Creature, rollCreature } from "../rollers/creatures";
 
+  const dispatch = createEventDispatcher();
   let rollResults: { creature: Creature; timestamp: string }[] = [];
 
   function roll(event: Event) {
     let creature = rollCreature();
     rollResults = [{ creature, timestamp: formatDate(new Date(), "P kk:mm:ss") }, ...rollResults];
+    dispatch("makeSomeNoise", { component: "CreatureRoller" });
   }
 </script>
 

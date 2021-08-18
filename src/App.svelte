@@ -1,6 +1,7 @@
 <script lang="ts">
   import { Accordion, AccordionHeader, AccordionItem } from "sveltestrap";
 
+  import SoundOptions from "./components/SoundOptions.svelte";
   import CreatureRoller from "./components/CreatureRoller.svelte";
   import DangerRoller from "./components/DangerRoller.svelte";
   import DetailsRoller from "./components/DetailsRoller.svelte";
@@ -13,15 +14,33 @@
   import RegionRoller from "./components/RegionRoller.svelte";
   import SteadingRoller from "./components/SteadingRoller.svelte";
   import Footer from "./components/Footer.svelte";
+
+  let rollThemBones = new Audio("https://soundbible.com/mp3/Shake And Roll Dice-SoundBible.com-591494296.mp3");
+  let playSounds = true;
+
+  function setSoundOptions(event: any) {
+    playSounds = event.detail.soundEnabled;
+  }
+
+  function roll(event: any) {
+    // console.log("called roll with", details);
+    rollThemBones.pause();
+    rollThemBones.currentTime = 0;
+    if (playSounds) {
+      rollThemBones.play();
+    }
+  }
 </script>
 
 <main>
   <h1>The Perilous Wilds</h1>
   <h2>A web-app for rolling on tables and getting funny results</h2>
   <hr />
+  <SoundOptions on:soundToggle={setSoundOptions} />
+  <hr />
   <Accordion>
     <AccordionItem active header="Creatures">
-      <CreatureRoller />
+      <CreatureRoller on:makeSomeNoise={roll} />
     </AccordionItem>
     <AccordionItem header="Dangers">
       <DangerRoller />
