@@ -2,127 +2,192 @@ import { random, sample } from 'lodash';
 import { Creature, rollCreature } from './creatures';
 import type { Kingdom } from './kingdoms';
 
+export class Benefit {
+  constructor(public description: string, public tags: string[] = []) { };
+}
+
+export class Problem {
+  constructor(public description: string, public tags: string[] = []) { };
+}
+
 export class Steading {
-  constructor(public roll: number = 0, public category: string = "", public description: string = "") { };
+  constructor(public roll: number = 0, public category: string = "", public description: string = "", public benefitRoll: number = 0, public problemRoll: number = 0) { };
   builtBy: Creature;
+  condition: string;
   kingdom: Kingdom;
-  problem: string;
+  oathSteading?: Steading;
+  tags: string[];
+  benefit: Benefit;
+  problem: Problem;
 }
 
 // TODO: This section is gonna need a lot of work
-export function rollSteading(roll: number = random(1, 12)): Steading {
+export function rollSteading(roll: number = random(1, 12), benefitRoll: number = random(1, 12), problemRoll: number = random(1, 12)): Steading {
   let steading = new Steading();
-  steading.builtBy = rollCreature(random(1, 4) + 4);
 
   if (roll <= 5) {
-    steading = rollVillage();
+    steading = rollVillage(benefitRoll, problemRoll);
   } else if (roll <= 8) {
-    steading = rollTown();
+    steading = rollTown(benefitRoll, problemRoll);
   } else if (roll <= 11) {
-    steading = rollKeep();
+    steading = rollKeep(benefitRoll, problemRoll);
   } else if (roll <= 12) {
-    steading = rollCity();
+    steading = rollCity(benefitRoll, problemRoll);
   }
+
+  steading.builtBy = rollCreature(random(1, 4) + 4);
   steading.roll = roll;
 
   return steading;
 }
 
 
-export function rollVillage(): Steading {
-  return new Steading(0, "village", "village");
+export function rollVillage(benefitRoll: number = random(1, 12), problemRoll: number = random(1, 12)): Steading {
+  let steading = new Steading(0, "village", "village", benefitRoll, problemRoll);
+  steading.tags = ["poor", "steady", "militia", "resource(GM choice)", "Oath(steading of GM's choice)"];
+  steading.condition = "If the village is part of a kingdom or empire";
+
+  if (benefitRoll <= 3) {
+    steading.benefit = new Benefit("natural defenses", ["safe", "-defenses"]);
+  } else if (benefitRoll <= 6) {
+    steading.benefit = new Benefit("abundant resources", ["+prosperity", "resource(GM choice)", "enmity(GM choice)"]);
+  } else if (benefitRoll <= 8) {
+    steading.oathSteading = new Steading();
+    steading.benefit = new Benefit("protected by another steading", ["oath(that steading)", "+defenses"]);
+  } else if (benefitRoll <= 10) {
+    steading.benefit = new Benefit("on a major road", ["trade(GM choice)", "+prosperity"]);
+  } else if (benefitRoll <= 11) {
+    steading.benefit = new Benefit("built around a wizard's tower", ["personage (the wizard)", "blight (arcane creatures)"]);
+  } else if (benefitRoll <= 12) {
+    steading.benefit = new Benefit("built on a site of religious significance", ["divine", "history(GM choice)"]);
+  }
+
+  if (problemRoll <= 2) {
+    steading.problem = new Problem("surrounded by and or uncultivable land", ["need (food)"]);
+  } else if (problemRoll <= 4) {
+    steading.problem = new Problem("dedicated to a deity", ["religious(that deity)", "enmity (steading of opposing deity)"]);
+  } else if (problemRoll <= 6) {
+    steading.problem = new Problem("recently at war", ["-population", "-prosperity if they fought to the end", "-defenses if they lost"]);
+  } else if (problemRoll <= 8) {
+    steading.problem = new Problem("monster problem", ["blight (that monster)", "need (adventurers)"]);
+  } else if (problemRoll <= 10) {
+    steading.problem = new Problem("absorbed another village", ["+population", "lawless"]);
+  } else if (problemRoll <= 12) {
+    steading.problem = new Problem("remote or unwelcoming", ["-prosperity", "dwarven or elven or other non-human"]);
+  }
+
+  return steading;
 }
 
-export function rollTown(): Steading {
-  return new Steading(0, "town", "town");
+export function rollTown(benefitRoll: number = random(1, 12), problemRoll: number = random(1, 12)): Steading {
+  let steading = new Steading(0, "town", "town", benefitRoll, problemRoll);
+  steading.tags = ["moderate", "steady", "watch", "trade (with 2 places of GM's choice)"];
+  steading.condition = "if the town is listed as Trade by another steading";
+
+  if (benefitRoll <= 1) {
+    steading.benefit = new Benefit("booming", ["booming", "lawless"]);
+  } else if (benefitRoll <= 3) {
+    steading.benefit = new Benefit("at a crossroads", ["market", "+prosperity"]);
+  } else if (benefitRoll <= 5) {
+    steading.oathSteading = new Steading();
+    steading.benefit = new Benefit("defended by another steading", ["oath (that steading)", "+defenses"]);
+  } else if (benefitRoll <= 7) {
+    steading.benefit = new Benefit("built around a church", ["power(divine)"]);
+  } else if (benefitRoll <= 10) {
+    steading.benefit = new Benefit("built around a craft", ["craft (your choice)", "resource (something required for that craft)"]);
+  } else if (benefitRoll <= 12) {
+    steading.benefit = new Benefit("built around a military post", ["+Defenses"]);
+  }
+
+  if (problemRoll <= 2) {
+    steading.problem = new Problem("outgrowing a vital resource", ["need (that resource)", "trade (a steading with that resource)"]);
+  } else if (problemRoll <= 4) {
+    steading.problem = new Problem("offers defense to others", ["oath (GM choice)", "-defenses"]);
+  } else if (problemRoll <= 6) {
+    steading.problem = new Problem("outlaw rumored to live there", ["personage (the outlaw)", "enmity (steading preyed upon)"]);
+  } else if (problemRoll <= 8) {
+    steading.problem = new Problem("controls a good / service", ["exotic (that good / service)", "enmity (steading with ambition)"]);
+  } else if (problemRoll <= 10) {
+    steading.problem = new Problem("suffers from disease", ["-population"]);
+  } else if (problemRoll <= 12) {
+    steading.problem = new Problem("popular meeting place", ["+population", "lawless"]);
+  }
+
+  return steading;
 }
 
-export function rollKeep(): Steading {
-  return new Steading(0, "keep", "keep");
+export function rollKeep(benefitRoll: number = random(1, 12), problemRoll: number = random(1, 12)): Steading {
+  let steading = new Steading(0, "keep", "keep", benefitRoll, problemRoll);
+  steading.tags = ["poor", "shrinking", "guard", "need (supplies)", "trade (someplace with supplies)", "oath (GM's choice)"];
+  steading.condition = "if the keep is owed fealty by at least one other steading";
+
+  if (benefitRoll <= 2) {
+    steading.benefit = new Benefit("belongs to a noble family", ["+prosperity", "power (political)"]);
+  } else if (benefitRoll <= 4) {
+    steading.benefit = new Benefit("run by a skilled commander", ["personage (the commander)", "+defenses"]);
+  } else if (benefitRoll <= 6) {
+    steading.benefit = new Benefit("stands watch over a trade road", ["+prosperity", "guild (trade)"]);
+  } else if (benefitRoll <= 8) {
+    steading.benefit = new Benefit("used to train special troops", ["arcane", "-population"]);
+  } else if (benefitRoll <= 10) {
+    steading.benefit = new Benefit("surrounded by fertile land", ["remove need (supplies)"]);
+  } else if (benefitRoll <= 12) {
+    steading.benefit = new Benefit("stands on a border", ["+defenses", "enmity (steading on the other side of the border)"]);
+  }
+
+  if (problemRoll <= 3) {
+    steading.problem = new Problem("built on a naturally defensible position", ["safe", "-population"]);
+  } else if (problemRoll <= 4) {
+    steading.problem = new Problem("formerly occupied by another power", ["enmity (steadings of that power)"]);
+  } else if (problemRoll <= 5) {
+    steading.problem = new Problem("safe haven for brigands", ["lawless"]);
+  } else if (problemRoll <= 6) {
+    steading.problem = new Problem("built to defend from a specific threat", ["blight (that threat)"]);
+  } else if (problemRoll <= 7) {
+    steading.problem = new Problem("has seen horrible bloody war", ["history (battle), blight (restless spirits)"]);
+  } else if (problemRoll <= 8) {
+    steading.problem = new Problem("is given the worst of the worst", ["need (skilled recruits)"]);
+  } else if (problemRoll <= 10) {
+    steading.problem = new Problem("suffers from disease", ["-population"]);
+  } else if (problemRoll <= 12) {
+    steading.problem = new Problem("popular meeting place", ["+population, -law"]);
+  }
+
+  return steading;
 }
 
-export function rollCity(): Steading {
-  return new Steading(0, "city", "city");
+export function rollCity(benefitRoll: number = random(1, 12), problemRoll: number = random(1, 12)): Steading {
+  let steading = new Steading(0, "city", "city");
+  steading.tags = ["moderate", "steady", "guard", "market", "guild (GM's choice)", "2+ oaths (steadings of GM's choice)"];
+  steading.condition = "if the city has trade with and fealty from at least 1 steading";
+
+  if (benefitRoll <= 3) {
+    steading.benefit = new Benefit("permanent defenses, such as walls", ["+defenses", "oath (GM's choice)"]);
+  } else if (benefitRoll <= 6) {
+    steading.benefit = new Benefit("ruled by a single individual", ["personage (the ruler)", "power (political)"]);
+  } else if (benefitRoll <= 7) {
+    steading.benefit = new Benefit("diverse", ["dwarven or elven or both"]);
+  } else if (benefitRoll <= 10) {
+    steading.benefit = new Benefit("trade hub", ["trade (every nearby steading)", "+prosperity"]);
+  } else if (benefitRoll <= 11) {
+    steading.benefit = new Benefit("ancient, built on top of its own ruins", ["history (your choice)", "divine"]);
+  } else if (benefitRoll <= 12) {
+    steading.benefit = new Benefit("center of learning", ["arcane", "craft (your choice)", "power(arcane)"]);
+  }
+
+  if (problemRoll <= 3) {
+    steading.problem = new Problem("outgrown its resources", ["+population", "need (food)"]);
+  } else if (problemRoll <= 6) {
+    steading.problem = new Problem("designs on nearby territory", ["enmity (nearby steadings)", "+defenses"]);
+  } else if (problemRoll <= 8) {
+    steading.problem = new Problem("ruled by a theocracy", ["-defenses", "power (divine)"]);
+  } else if (problemRoll <= 10) {
+    steading.problem = new Problem("ruled by the people", ["-defenses", "+population"]);
+  } else if (problemRoll <= 11) {
+    steading.problem = new Problem("supernatural defenses", ["+defenses", "blight (related supernatural creatures)"]);
+  } else if (problemRoll <= 12) {
+    steading.problem = new Problem("occupies a place of power", ["arcane", "personage (whoever watches the place of power)", "blight (arcane creatures)"]);
+  }
+
+  return steading;
 }
-
-
-
-// 1 - 5 VILLAGE
-// Poor, Steady, Militia, Resource(GM choice) and has an Oath(steading of GM's choice). If the village is part of a kingdom or empire, choose I or roll 1d12:
-// 1 - 3 Natural defenses: Safe, -Defenses
-// 4 - 6 Abundant resources: +Prosperity, Resource(GM choice), Enmity(GM choice) 7 - 8 Protected by another steading: Oath(that steading), .Defenses
-// 9 - 10 On a major road: Trade(GM choice), +Prosperity
-// 11	Built around a wizard's tower: Personage (the wizard), Blight (arcane creatures)
-// 12	Built on a site of religious significance: Divine, History(GM choice)
-// Then, choose I problem or roll 1d12:
-//   1 - 2 Surrounded by and or uncultivable land: Need(food)
-// 3 - 4 Dedicated to a deity: Religious(that deity), Enmity(steading of opposing deity)
-// 5 - 6 Recently at war: -Population, -Prosperity if they fought to the end, -Defenses if they lost 7 - 8 Monster problem: Blight(that monster), Need(adventurers)
-// 9 - 10 Absorbed another village: +Population, Lawless
-// 11 - 12 Remote or unwelcoming: -Prosperity, Dwarven or Elven or other non - human
-// 6 - 8 TowN
-// Moderate, Steady, Watch, and Trade(with 2 places of GM's choice).
-// If the town is listed as Trade by another steading, choose I or roll 1d12:
-// 1	Booming: Booming, Lawless
-// 2 - 3 At a crossroads: Market, +Prosperity
-// 4 - 5 Defended by another steading: Oath(that steading), +Defenses
-// 6 - 7 Built around a church: Power(divine)
-// 8 - 10 Built around a craft: Craft(your choice), Resource(something required for that craft) 11 - 12 Built around a military post.Defenses
-// Then, choose 1 problem or roll 1d12:
-// 1 - 2 Outgrowing a vital resource: Need(that resource), Trade(a steading with that resource) 3 - 4 Offers defense to others: Oath(GM choice), -Defenses
-// 5 - 6 Outlaw rumored to live there: Personage(the outlaw), Enmity(steading preyed upon) 7 - 8 Controls a good / service: Exotic(that good / service), Enmity(steading with ambition) 9 - 10 Suffers from disease: -Population
-// 11 - 12 lkpular meeting place: +Population, Lawless
-// Then, choose I problem or roll 1d12:
-// 9 - 11 KEEP
-// Poor, Shrinking, Guard, Need(supplies), Trade(somei
-// If the keep is owed fealty by at least one other stea, E
-// 1 - 2 Belongs to a noble family: +Prosperity, Tozer(p 3 - 4 Run by a skilled commander: Personage(the
-// 5 - 6 Stands watch over a trade road: .Prosperity, GNI 7 - 8 Used to train special troops: Arcane, -Population 9 - 10 Surrounded by fertile land: remove Need(Supçifr 11 - 12 Stands on a border: .Defenses, Enmity(steadinga
-// Then, choose I problem or roll 1d12:
-//   1 - 3	Built on a naturally defensible position: Safe, -fl, p.
-// 4	Formerly occupied by another power: Enmity(Sim
-// 5	Safe haven for brigands: Lawless
-// 6	Built to defend from a specific threat: Blight(tbat
-// 7	Has seen horrible bloody war: History(battle),
-//   8	Is given the worst of the worst: Need(skilled recrn
-// 9 - 10 Suffers from disease: -Population
-// 11 - 12 Ik)pular meeting place: * Population, -Law
-// 12 QTY
-// Moderate, Steady, Guard, Market, Guild(GM's choice), 2. If the city has trade with and fealty from at least 1 steadin
-// 1 - 3 Permanent defenses, such as walls: +Defenses, Oath 4 - 6 Ruled by a single individual: Personage(the ruler). 7 Diverse: Dwarven or Elven or both
-// 8 - 10 Trade hub: Trade(every nearby steading), +Prosperi
-// 11	Ancient, built on top of its own ruins: History(yoa
-// 12	Center of learning: Arcane, Craft(your choice), Fbs
-// 		1 - 3 Outgrown its resources: +Population, Need(food) 4 - 6 Designs on nearby territory: Enmity(nearby stead 7 - 8 Ruled by a theocracy: -Defenses, Power(divine) 9 - 10 Ruled by the people: -Defenses, +Population
-// 		11	Supernatural defenses: .Defenses, Blight(related sti
-// 		12	Occupies a place of power: Arcane, Personage(who
-// 		Blight(arcane creatures)
-// 9 - 11 KEEP
-// Poor, Shrinking, Guard, Need(supplies), Trade(someplace with supplies), Oath(GM's choice). If the keep is owed fealty by at least one other steading, choose 1 or roll 1d12:
-// 1 - 2 Belongs to a noble family: +Prosperity, Power(political)
-// 3 - 4 Run by a skilled commander: Personage(the commander), .Defenses 5 - 6 Stands watch over a trade road: +Prosperity, Guild(trade)
-// 7 - 8 Used to train special troops: Arcane, -Population
-// 9 - 10 Surrounded by fertile land: remove Need(Supplies)
-// 11 - 12 Stands on a border: .Defenses, Enmity(steading on the other side of the border)
-// Then, choose I problem or roll 1d12:
-//     1 - 3	Built on a naturally defensible position: Safe, -Population
-// 4	Formerly occupied by another power: Enmity(steadings of that power)
-// 5	Safe haven for brigands: Lawless
-// 6	Built to defend from a specific threat: Blight(that threat)
-// 7	Has seen horrible bloody war: History(battle), Blight(restless spirits)
-// 8	Is given the worst of the worst: Need(skilled recruits)
-// 9 - 10 Suffers from disease: -Population
-// 11 - 12 Popular meeting place: .Population, -Law
-// 12 QTY
-// Moderate, Steady, Guard, Market, Guild(GM's choice), 2+ Oaths (steadings of GM's choice) If the city has trade with and fealty from at least 1 steading, choose I or roll 1d12:
-// 1 - 3 Permanent defenses, such as walls: +Defenses, Oath((M's choice) 4-6 Ruled by a single individual: Personage (the ruler), Power (political) 7	Diverse: Dwarven or Elven or both
-// 8 - 10 Trade hub: Trade(every nearby steading), +Prosperity
-// 11	Ancient, built on top of its own ruins: History(your choice), Divine
-// 12	Center of learning: Arcane, Craft(your choice), Power(arcane)
-// Then, choose I problem or roll 1d12:
-//   1 - 3 Outgrown its resources: +Population, Need(food)
-// 4 - 6 Designs on nearby territory: Enmity(nearby steadings), .Defenses 7 - 8 Ruled by a theocracy: -Defenses, Power(divine)
-// 9 - 10 Ruled by the people: -Defenses, +Population
-// 11	Supernatural defenses: +Defenses, Blight(related supernatural creatures)
-// 12	Occupies a place of power: Arcane, Personage(whoever watches the place of power),
-//   Blight(arcane creatures)

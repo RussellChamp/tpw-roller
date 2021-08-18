@@ -40,7 +40,7 @@ export function rollCreature(roll: number = random(1, 12), subroll: number = ran
   } else if (roll <= 8) {
     return rollHumanoid(roll, subroll, specificroll);
   } else if (roll <= 12) {
-    return rollMonster();
+    return rollMonster(roll, subroll, specificroll);
   }
 
   return new Creature(roll, subroll, specificroll);

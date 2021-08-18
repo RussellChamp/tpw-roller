@@ -4,6 +4,7 @@
 
   import DieIcon from "./DieIcon.svelte";
   import CreatureCard from "./CreatureCard.svelte";
+  import SteadingCard from "./SteadingCard.svelte";
   import type { Discovery } from "../rollers/discoveries";
 
   export let discovery: Discovery;
@@ -30,7 +31,7 @@
             </Row>
           {:else if discovery.category == "steading"}
             <Row>
-              <p>TODO: format steadings</p>
+              <SteadingCard steading={discovery.steading} {timestamp} />
             </Row>
           {:else}
             <Row>

@@ -11,6 +11,7 @@
   import NpcRoller from "./components/NpcRoller.svelte";
   import PlaceRoller from "./components/PlaceRoller.svelte";
   import RegionRoller from "./components/RegionRoller.svelte";
+  import SteadingRoller from "./components/SteadingRoller.svelte";
   import Footer from "./components/Footer.svelte";
 </script>
 
@@ -48,6 +49,9 @@
     </AccordionItem>
     <AccordionItem header="Regions">
       <RegionRoller />
+    </AccordionItem>
+    <AccordionItem header="Steadings">
+      <SteadingRoller />
     </AccordionItem>
   </Accordion>
   <Footer />
