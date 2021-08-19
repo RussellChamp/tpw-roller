@@ -34,7 +34,7 @@
       rollThemBones.play();
 
       let playTime = rollThemBones.duration * 1000 * (0.3 + 0.7 * Math.random()); // vary the playback duration
-      console.log(`rolling die at volume ${rollThemBones.volume}, playbackRate ${rollThemBones.playbackRate}, play duration ${playTime}`);
+      // console.log(`rolling die at volume ${rollThemBones.volume}, playbackRate ${rollThemBones.playbackRate}, play duration ${playTime}`);
       timeout = setTimeout(() => {
         rollThemBones.pause();
       }, playTime);
