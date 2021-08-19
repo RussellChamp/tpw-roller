@@ -17,17 +17,27 @@
 
   let rollThemBones = new Audio("https://soundbible.com/mp3/Shake And Roll Dice-SoundBible.com-591494296.mp3");
   let playSounds = true;
+  let timeout: NodeJS.Timeout;
 
   function setSoundOptions(event: any) {
     playSounds = event.detail.soundEnabled;
   }
 
-  function roll(event: any) {
-    // console.log("called roll with", details);
+  function handleRoll(event: any) {
+    clearTimeout(timeout);
     rollThemBones.pause();
     rollThemBones.currentTime = 0;
+
     if (playSounds) {
+      rollThemBones.volume = 0.6 + 0.4 * Math.random(); // vary the volume
+      rollThemBones.playbackRate = 0.6 + 0.8 * Math.random(); // vary the playback rate
       rollThemBones.play();
+
+      let playTime = rollThemBones.duration * 1000 * (0.3 + 0.7 * Math.random()); // vary the playback duration
+      console.log(`rolling die at volume ${rollThemBones.volume}, playbackRate ${rollThemBones.playbackRate}, play duration ${playTime}`);
+      timeout = setTimeout(() => {
+        rollThemBones.pause();
+      }, playTime);
     }
   }
 </script>
@@ -40,37 +50,37 @@
   <hr />
   <Accordion>
     <AccordionItem active header="Creatures">
-      <CreatureRoller on:makeSomeNoise={roll} />
+      <CreatureRoller on:roll={handleRoll} />
     </AccordionItem>
     <AccordionItem header="Dangers">
-      <DangerRoller />
+      <DangerRoller on:roll={handleRoll} />
     </AccordionItem>
     <AccordionItem header="Details">
-      <DetailsRoller />
+      <DetailsRoller on:roll={handleRoll} />
     </AccordionItem>
     <AccordionItem header="Discoveries">
-      <DiscoveryRoller />
+      <DiscoveryRoller on:roll={handleRoll} />
     </AccordionItem>
     <AccordionItem header="Dungeons">
-      <DungeonRoller />
+      <DungeonRoller on:roll={handleRoll} />
     </AccordionItem>
     <AccordionItem header="Followers">
-      <FollowerRoller />
+      <FollowerRoller on:roll={handleRoll} />
     </AccordionItem>
     <AccordionItem header="Kingdoms">
-      <KingdomRoller />
+      <KingdomRoller on:roll={handleRoll} />
     </AccordionItem>
     <AccordionItem header="NPCs">
-      <NpcRoller />
+      <NpcRoller on:roll={handleRoll} />
     </AccordionItem>
     <AccordionItem header="Places">
-      <PlaceRoller />
+      <PlaceRoller on:roll={handleRoll} />
     </AccordionItem>
     <AccordionItem header="Regions">
-      <RegionRoller />
+      <RegionRoller on:roll={handleRoll} />
     </AccordionItem>
     <AccordionItem header="Steadings">
-      <SteadingRoller />
+      <SteadingRoller on:roll={handleRoll} />
     </AccordionItem>
   </Accordion>
   <Footer />

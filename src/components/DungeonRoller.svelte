@@ -1,16 +1,19 @@
 <script lang="ts">
   import { Button } from "sveltestrap";
   import { format as formatDate } from "date-fns";
+  import { createEventDispatcher } from "svelte";
 
   import DungeonCard from "./DungeonCard.svelte";
   import { Dungeon, rollDungeon } from "../rollers/dungeons";
+
+  const dispatch = createEventDispatcher();
 
   export let rollResults: { dungeon: Dungeon; timestamp: string }[] = [];
 
   function roll(event: Event) {
     let dungeon = rollDungeon();
-
     rollResults = [{ dungeon, timestamp: formatDate(new Date(), "P kk:mm:ss") }, ...rollResults];
+    dispatch("roll");
   }
 </script>
 

@@ -1,13 +1,17 @@
 <script lang="ts">
   import { format as formatDate } from "date-fns";
+  import { createEventDispatcher } from "svelte";
   import { Button } from "sveltestrap";
   import { rollPlace } from "../rollers/places";
+
+  const dispatch = createEventDispatcher();
 
   export let rollResults: { place: string; timestamp: string }[] = [];
 
   function roll(event: Event) {
     let place = rollPlace();
     rollResults = [{ place, timestamp: formatDate(new Date(), "P kk:mm:ss") }, ...rollResults];
+    dispatch("roll");
   }
 </script>
 

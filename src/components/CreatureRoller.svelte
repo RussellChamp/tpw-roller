@@ -11,7 +11,7 @@
   function roll(event: Event) {
     let creature = rollCreature();
     rollResults = [{ creature, timestamp: formatDate(new Date(), "P kk:mm:ss") }, ...rollResults];
-    dispatch("makeSomeNoise", { component: "CreatureRoller" });
+    dispatch("roll");
   }
 </script>
 

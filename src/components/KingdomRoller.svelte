@@ -1,9 +1,12 @@
 <script lang="ts">
   import { capitalize } from "lodash";
   import { format as formatDate } from "date-fns";
+  import { createEventDispatcher } from "svelte";
   import { Button, Icon } from "sveltestrap";
 
   import { kingdoms, rollCategory } from "../rollers/kingdoms";
+
+  const dispatch = createEventDispatcher();
 
   let rollResults: { value: string; icon: string; timestamp: string }[] = [];
   let kingdom = "arpad";
@@ -11,9 +14,9 @@
 
   function roll(category: string) {
     let value = rollCategory(kingdom, category);
-
     let icon = { male: "person-fill", female: "person", steading: "house-door-fill", mount: "bicycle" }[category] || "";
     rollResults = [{ value, icon, timestamp: formatDate(new Date(), "P kk:mm:ss") }, ...rollResults];
+    dispatch("roll");
   }
 
   $: categories = kingdoms[kingdom].categories;

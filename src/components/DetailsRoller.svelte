@@ -1,5 +1,6 @@
 <script lang="ts">
   import { format as formatDate } from "date-fns";
+  import { createEventDispatcher } from "svelte";
   import { Button, Icon } from "sveltestrap";
   import {
     rollAbility,
@@ -25,6 +26,8 @@
 
   import DieIcon from "./DieIcon.svelte";
 
+  const dispatch = createEventDispatcher();
+
   let rollResults: { type: string; roll: number; value: string; timestamp: string }[] = [];
 
   function roll(item: { type: string; description: string; roll: number }) {
@@ -32,6 +35,7 @@
       { type: item.type, roll: item.roll, value: item.description, timestamp: formatDate(new Date(), "P kk:mm:ss") },
       ...rollResults,
     ];
+    dispatch("roll");
   }
 </script>
 

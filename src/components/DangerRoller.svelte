@@ -1,7 +1,10 @@
 <script lang="ts">
   import { format as formatDate } from "date-fns";
+  import { createEventDispatcher } from "svelte";
   import { Button, Icon } from "sveltestrap";
   import { Danger, rollDanger } from "../rollers/dangers";
+
+  const dispatch = createEventDispatcher();
 
   export let rollResults: { danger: Danger; icon: string; timestamp: string }[] = [];
 
@@ -16,6 +19,7 @@
         ? "emoji-neutral"
         : "";
     rollResults = [{ danger, icon, timestamp: formatDate(new Date(), "P kk:mm:ss") }, ...rollResults];
+    dispatch("roll");
   }
 </script>
 
