@@ -102,21 +102,21 @@ function rollBuilder(roll: number = random(1, 12)): Builder {
   if (roll <= 1) {
     return new Builder(roll, sample(["aliens", "precursors"]));
   } else if (roll <= 2) {
-    return new Builder(roll, sample(["demigod", "demon"]));
+    return new Builder(roll, sample(["a demigod", "a demon"]));
   } else if (roll <= 3) {
-    return new Builder(roll, "natural(caves, etc.)");
+    return new Builder(roll, "natural means (caves, etc.)");
   } else if (roll <= 5) {
-    return new Builder(roll, sample(["religious order", "cult"]));
+    return new Builder(roll, sample(["a religious order", "a cult"]));
   } else if (roll <= 6) {
-    return new Builder(roll, rollHumanoid().description);
+    return new Builder(roll, `a ${rollHumanoid().description}`);
   } else if (roll <= 8) {
     return new Builder(roll, sample(["dwarves", "gnomes"]));
   } else if (roll <= 10) {
     return new Builder(roll, "elves");
   } else if (roll <= 11) {
-    return new Builder(roll, sample(["wizard", "madman"]));
+    return new Builder(roll, sample(["a wizard", "a madman"]));
   } else if (roll <= 12) {
-    return new Builder(roll, sample(["monarch", "warlord"]));
+    return new Builder(roll, sample(["a monarch", "a warlord"]));
   }
 
   return new Builder(roll);

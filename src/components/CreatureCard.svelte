@@ -1,23 +1,55 @@
 <script lang="ts">
+  import { createEventDispatcher } from "svelte";
   import { capitalize } from "lodash";
-  import { Card, CardHeader, CardTitle, CardBody, CardSubtitle, CardText, CardFooter, Container, Row } from "sveltestrap";
+  import {
+    Card,
+    CardHeader,
+    CardTitle,
+    CardBody,
+    CardSubtitle,
+    CardText,
+    CardFooter,
+    Container,
+    Row,
+    Button,
+    Icon,
+    Tooltip,
+  } from "sveltestrap";
 
+  import ClipboardHelper from "./ClipboardHelper.svelte";
   import NpcCard from "./NpcCard.svelte";
   import DieIcon from "./DieIcon.svelte";
   import type { Creature } from "../rollers/creatures";
 
+  const dispatch = createEventDispatcher();
+
   export let creature: Creature;
   export let timestamp: string;
+
+  function remove() {
+    dispatch("remove");
+  }
 </script>
 
 <main>
   <Card class="mb-3">
     <CardHeader>
       <CardTitle>
-        {capitalize(creature.type)}<DieIcon value={creature.roll} />
-        {#if creature.subtype !== ""}({creature.subtype})<DieIcon value={creature.subroll} />{/if}: {capitalize(
-          creature.description
-        )}<DieIcon value={creature.specificroll} />
+        <div class="title">
+          <div class="description">
+            {capitalize(creature.type)}<DieIcon value={creature.roll} />
+            {#if creature.subtype !== ""}({creature.subtype})<DieIcon value={creature.subroll} />{/if}: {capitalize(
+              creature.description
+            )}<DieIcon value={creature.specificroll} />
+          </div>
+          <div class="buttons">
+            <ClipboardHelper data={creature} dataType="creature" />
+            <Button id="remove" outline color="danger" on:click={remove}>
+              <Icon name="x" />
+            </Button>
+            <Tooltip target="remove" placement="top">Remove Item</Tooltip>
+          </div>
+        </div>
       </CardTitle>
     </CardHeader>
     <CardBody>
@@ -72,8 +104,12 @@
   main {
     text-align: left;
   }
-  .card-subtitle {
-    padding-bottom: 1em;
+  .title {
+    display: flex;
+    justify-content: space-between;
+  }
+  .title .buttons {
+    display: flex;
   }
   ul {
     margin-left: 2em;

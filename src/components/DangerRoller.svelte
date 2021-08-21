@@ -1,38 +1,18 @@
 <script lang="ts">
-  import { format as formatDate } from "date-fns";
   import { createEventDispatcher } from "svelte";
-  import { Button, Icon } from "sveltestrap";
-  import { Danger, rollDanger } from "../rollers/dangers";
+  import { Button } from "sveltestrap";
+  import { rollDanger } from "../rollers/dangers";
 
   const dispatch = createEventDispatcher();
 
-  export let rollResults: { danger: Danger; icon: string; timestamp: string }[] = [];
-
   function roll(event: Event) {
     let danger = rollDanger();
-    let icon =
-      danger.category == "unnatural entity"
-        ? "person-square"
-        : danger.category == "hazard"
-        ? "lightning-fill"
-        : danger.category == "creature"
-        ? "emoji-neutral"
-        : "";
-    rollResults = [{ danger, icon, timestamp: formatDate(new Date(), "P kk:mm:ss") }, ...rollResults];
-    dispatch("roll");
+    dispatch("roll", { type: "danger", value: danger });
   }
 </script>
 
 <main>
-  <span class="btn">
-    <Button color="primary" on:click={roll}>Roll Danger</Button>
-  </span>
-
-  {#each rollResults as { danger, icon, timestamp }}
-    <h4>
-      {timestamp}: {danger.category} ({danger.subcategory}) <Icon name={icon} />: {danger.description}
-    </h4>
-  {/each}
+  <Button color="primary" on:click={roll}>Roll Danger</Button>
 </main>
 
 <style>

@@ -1,47 +1,40 @@
 <script lang="ts">
   import { capitalize } from "lodash";
-  import { format as formatDate } from "date-fns";
   import { createEventDispatcher } from "svelte";
-  import { Button, Icon } from "sveltestrap";
+  import { Button } from "sveltestrap";
 
-  import { kingdoms, rollCategory } from "../rollers/kingdoms";
+  import { KingdomItem, kingdoms, rollCategory } from "../rollers/kingdoms";
 
   const dispatch = createEventDispatcher();
 
-  let rollResults: { value: string; icon: string; timestamp: string }[] = [];
   let kingdom = "arpad";
   let categories: string[];
 
   function roll(category: string) {
     let value = rollCategory(kingdom, category);
-    let icon = { male: "person-fill", female: "person", steading: "house-door-fill", mount: "bicycle" }[category] || "";
-    rollResults = [{ value, icon, timestamp: formatDate(new Date(), "P kk:mm:ss") }, ...rollResults];
-    dispatch("roll");
+
+    dispatch("roll", { type: "kingdom", value: new KingdomItem(kingdoms[kingdom], category, value) });
   }
 
   $: categories = kingdoms[kingdom].categories;
 </script>
 
 <main>
-  <h2>
-    <select bind:value={kingdom}>
-      {#each Object.keys(kingdoms) as k}
-        <option value={k}>{kingdoms[k].description}</option>
-      {/each}
-    </select>
-  </h2>
-  <h3>{kingdoms[kingdom].subtitle}</h3>
+  <select bind:value={kingdom}>
+    {#each Object.keys(kingdoms) as k}
+      <option value={k}>{kingdoms[k].description}</option>
+    {/each}
+  </select>
+
+  <div>{kingdoms[kingdom].subtitle}</div>
 
   {#each categories as category}
-    <span class="btn">
-      <Button color="primary" on:click={() => roll(category)}>Roll {capitalize(category)}</Button>
-    </span>
-  {/each}
-
-  {#each rollResults as { value, icon, timestamp }}
-    <h4>{timestamp}: <Icon name={icon} /> {value}</h4>
+    <Button color="primary" on:click={() => roll(category)}>Roll {capitalize(category)}</Button>
   {/each}
 </main>
 
 <style>
+  select {
+    font-size: 0.8em;
+  }
 </style>

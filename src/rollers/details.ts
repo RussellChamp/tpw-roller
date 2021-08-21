@@ -1,5 +1,11 @@
 import { random, replace, sample, sampleSize } from "lodash";
 
+// This is the general implemenetation of details.
+// We are not doing strict class inheritance because that way leads to pain
+export class Detail {
+  constructor(public type: string, public roll: number, public description: string) { }
+}
+
 export class Ability {
   type: string = "ability";
   constructor(public roll: number = 0, public description = "") { };

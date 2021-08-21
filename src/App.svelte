@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { Accordion, AccordionHeader, AccordionItem } from "sveltestrap";
+  import { format as formatDate } from "date-fns";
+  import { Accordion, AccordionHeader, AccordionItem, Container, Row, Col } from "sveltestrap";
 
   import SoundOptions from "./components/SoundOptions.svelte";
   import CreatureRoller from "./components/CreatureRoller.svelte";
@@ -14,16 +15,26 @@
   import RegionRoller from "./components/RegionRoller.svelte";
   import SteadingRoller from "./components/SteadingRoller.svelte";
   import Footer from "./components/Footer.svelte";
+  import MultiCard from "./components/MultiCard.svelte";
+  import { RollCard } from "./types/RollCard";
 
   let rollThemBones = new Audio("https://soundbible.com/mp3/Shake And Roll Dice-SoundBible.com-591494296.mp3");
-  let playSounds = true;
+  let playSounds = localStorage?.getItem("playSounds") != "false";
   let timeout: NodeJS.Timeout;
+  let cards: RollCard[] = [];
 
-  function setSoundOptions(event: any) {
+  function setSoundOptions(event: CustomEvent<{ soundEnabled: boolean }>) {
     playSounds = event.detail.soundEnabled;
+    localStorage?.setItem("playSounds", String(playSounds));
   }
 
-  function handleRoll(event: any) {
+  function handleRoll(event: CustomEvent<{ type: string; value: any }>) {
+    let timestamp = formatDate(new Date(), "P kk:mm:ss");
+    cards = [new RollCard(event?.detail?.type, event?.detail?.value, timestamp), ...cards];
+    playAudio();
+  }
+
+  function playAudio() {
     clearTimeout(timeout);
     rollThemBones.pause();
     rollThemBones.currentTime = 0;
@@ -40,50 +51,57 @@
       }, playTime);
     }
   }
+
+  function remove(event: CustomEvent<RollCard>) {
+    cards = cards.filter((c) => c.timestamp != event.detail.timestamp);
+  }
 </script>
 
 <main>
-  <h1>The Perilous Wilds</h1>
-  <h2>A web-app for rolling on tables and getting funny results</h2>
-  <hr />
-  <SoundOptions on:soundToggle={setSoundOptions} />
-  <hr />
-  <Accordion>
-    <AccordionItem active header="Creatures">
-      <CreatureRoller on:roll={handleRoll} />
-    </AccordionItem>
-    <AccordionItem header="Dangers">
-      <DangerRoller on:roll={handleRoll} />
-    </AccordionItem>
-    <AccordionItem header="Details">
-      <DetailsRoller on:roll={handleRoll} />
-    </AccordionItem>
-    <AccordionItem header="Discoveries">
-      <DiscoveryRoller on:roll={handleRoll} />
-    </AccordionItem>
-    <AccordionItem header="Dungeons">
-      <DungeonRoller on:roll={handleRoll} />
-    </AccordionItem>
-    <AccordionItem header="Followers">
-      <FollowerRoller on:roll={handleRoll} />
-    </AccordionItem>
-    <AccordionItem header="Kingdoms">
-      <KingdomRoller on:roll={handleRoll} />
-    </AccordionItem>
-    <AccordionItem header="NPCs">
-      <NpcRoller on:roll={handleRoll} />
-    </AccordionItem>
-    <AccordionItem header="Places">
-      <PlaceRoller on:roll={handleRoll} />
-    </AccordionItem>
-    <AccordionItem header="Regions">
-      <RegionRoller on:roll={handleRoll} />
-    </AccordionItem>
-    <AccordionItem header="Steadings">
-      <SteadingRoller on:roll={handleRoll} />
-    </AccordionItem>
-  </Accordion>
-  <Footer />
+  <Container fluid={true}>
+    <Row>
+      <h1>The Perilous Wilds</h1>
+      <h2>A web-app for rolling on tables and getting funny results</h2>
+      <hr />
+    </Row>
+    <Row>
+      <Col sm="3">
+        <div class="sidebar">
+          <h3>Rollers:</h3>
+          <hr />
+          <CreatureRoller on:roll={handleRoll} />
+          <DangerRoller on:roll={handleRoll} />
+          <DiscoveryRoller on:roll={handleRoll} />
+          <DungeonRoller on:roll={handleRoll} />
+          <FollowerRoller on:roll={handleRoll} />
+          <NpcRoller on:roll={handleRoll} />
+          <PlaceRoller on:roll={handleRoll} />
+          <RegionRoller on:roll={handleRoll} />
+          <SteadingRoller on:roll={handleRoll} />
+
+          <h3>Kingdom:</h3>
+          <KingdomRoller on:roll={handleRoll} />
+
+          <h3>Details:</h3>
+          <DetailsRoller on:roll={handleRoll} />
+
+          <hr />
+
+          <h3>Options</h3>
+          <SoundOptions soundEnabled={playSounds} on:soundToggle={setSoundOptions} />
+        </div>
+      </Col>
+      <Col sm="9">
+        <h3>Results:</h3>
+        {#each cards as card}
+          <MultiCard {card} on:remove={remove} />
+        {/each}
+      </Col>
+    </Row>
+    <Row>
+      <Footer />
+    </Row>
+  </Container>
 </main>
 
 <style>
@@ -99,6 +117,10 @@
     text-transform: uppercase;
     font-size: 4em;
     font-weight: 100;
+  }
+
+  .sidebar {
+    background-color: rgba(0, 0, 0, 0.03);
   }
 
   @media (min-width: 640px) {

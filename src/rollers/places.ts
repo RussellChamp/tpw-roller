@@ -1,6 +1,8 @@
 import { sample } from "lodash";
 import { bodgeString } from "./utils";
 
+export type Place = string;
+
 export const places = {
   templates: [
     'The [PLACE]',
@@ -15,7 +17,7 @@ export const places = {
   noun: ['[Name]', 'Arm', 'Ash', 'Blood', 'Child', 'Cinder', 'Corpse', 'Crystal', 'Dagger', 'Death', 'Demon', 'Devil', 'Doom', 'Eye', 'Fear', 'Finger', 'Fire', 'Foot', 'Ghost', 'Giant', 'Goblin', 'God', 'Gold', 'Hand', 'Head', 'Heart', 'Hero', 'Hope', 'King', 'Knave', 'Knight', 'Muck', 'Mud', 'Priest', 'Queen', 'Sailor', 'Silver', 'Skull', 'Smoke', 'Souls', 'Spear', 'Spirit', 'Stone', 'Sword', 'Thief', 'Troll', 'Warrior', 'Water', 'Witch', 'Wizard',],
 };
 
-export function rollPlace(): string {
+export function rollPlace(): Place {
   let template = sample(places.templates);
   let place = bodgeString(template, places);
 

@@ -1,6 +1,8 @@
 import { sample } from "lodash";
 import { bodgeString } from "./utils";
 
+export type Region = string;
+
 export const regions = {
   templates: [
     '[ADJECTIVE] [TERRAIN]',

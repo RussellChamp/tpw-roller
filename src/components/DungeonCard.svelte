@@ -25,9 +25,7 @@
 <main>
   <Card class="mb-3">
     <CardHeader>
-      <CardTitle
-        >{capitalize(dungeon.size.description)} {dungeon.function.description} built by (a/an) {dungeon.builder.description}</CardTitle
-      >
+      <CardTitle>{capitalize(dungeon.size.description)} {dungeon.function.description} built by {dungeon.builder.description}</CardTitle>
     </CardHeader>
     <CardBody>
       <CardSubtitle>

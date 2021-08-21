@@ -2,4 +2,5 @@ Add Steadings tables
 Change steadings and mounts to not show English names by default
 Make everything look nicer
 Maybe put roller button in a left nav bar and the results in the middle?
+Add a copy-to-clipboard option
 Add a 3d dice rolling visualizer

@@ -9,6 +9,10 @@ export class Kingdom {
   mount: string[];
 }
 
+export class KingdomItem {
+  constructor(public kingdom: Kingdom, public category: string = "", public description: string = "") { };
+}
+
 export const kingdoms: { [kingdom: string]: Kingdom } = {
   arpad: {
     description: 'The Kingdom of Arpad',

@@ -2,8 +2,8 @@
   import { createEventDispatcher } from "svelte";
   import { Button, Icon } from "sveltestrap";
 
+  export let soundEnabled: boolean;
   const dispatch = createEventDispatcher();
-  let soundEnabled = true;
 
   function toggleSound() {
     soundEnabled = !soundEnabled;
