@@ -10,7 +10,7 @@ export class Npc {
   hometown: string;
   context: Context;
   occupation: Occupation
-  trait: Trait;
+  traits: Trait[];
   follower: Follower;
 
   getDescription(fullDesc: boolean = false) {
@@ -32,7 +32,7 @@ export function rollNpc(): Npc {
 
   npc.context = rollContext();
   npc.occupation = rollOccupation();
-  npc.trait = rollTrait();
+  npc.traits.push(rollTrait());
   npc.follower = rollFollower();
 
   return npc;

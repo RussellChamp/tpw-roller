@@ -1,15 +1,36 @@
 <script lang="ts">
+  import { createEventDispatcher } from "svelte";
   import { Card, CardHeader, CardTitle, CardBody, CardSubtitle, CardText, CardFooter, Container, Col, Row } from "sveltestrap";
-  import type { Follower } from "../rollers/followers";
+  import { Follower, rollFollower } from "../rollers/followers";
+  import { RerolledEvent } from "../types/RerolledEvent";
+  import CardButtons from "./CardTitleButtons.svelte";
 
+  const dispatch = createEventDispatcher();
   export let follower: Follower;
-  export let timestamp: string;
+  export let timestamp: string = "";
+  export let showRemove: boolean = true;
+
+  function reroll() {
+    follower = rollFollower();
+    dispatch("rerolled", new RerolledEvent("follower", follower));
+  }
+
+  function remove() {
+    dispatch("remove");
+  }
 </script>
 
 <main>
   <Card class="mb-3">
     <CardHeader>
-      <CardTitle>{follower.name} ({follower.gender})</CardTitle>
+      <CardTitle>
+        <div class="title">
+          <div class="description">
+            Follower: {follower.name} ({follower.gender})
+          </div>
+          <CardButtons data={follower} dataType="follower" on:reroll={reroll} {showRemove} on:remove={remove} />
+        </div>
+      </CardTitle>
     </CardHeader>
     <CardBody>
       <CardSubtitle>
@@ -88,13 +109,19 @@
         </Container>
       </CardText>
     </CardBody>
-    <CardFooter>{timestamp}</CardFooter>
+    {#if timestamp}
+      <CardFooter>{timestamp}</CardFooter>
+    {/if}
   </Card>
 </main>
 
 <style>
   main {
     text-align: left;
+  }
+  .title {
+    display: flex;
+    justify-content: space-between;
   }
   p {
     margin-left: 1em;

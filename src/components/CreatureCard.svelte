@@ -1,30 +1,24 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
   import { capitalize } from "lodash";
-  import {
-    Card,
-    CardHeader,
-    CardTitle,
-    CardBody,
-    CardSubtitle,
-    CardText,
-    CardFooter,
-    Container,
-    Row,
-    Button,
-    Icon,
-    Tooltip,
-  } from "sveltestrap";
+  import { Card, CardHeader, CardTitle, CardBody, CardText, CardFooter, Container, Row } from "sveltestrap";
 
-  import ClipboardHelper from "./ClipboardHelper.svelte";
   import NpcCard from "./NpcCard.svelte";
   import DieIcon from "./DieIcon.svelte";
-  import type { Creature } from "../rollers/creatures";
+  import CardButtons from "./CardTitleButtons.svelte";
+  import { Creature, rollCreature } from "../rollers/creatures";
+  import { RerolledEvent } from "../types/RerolledEvent";
 
   const dispatch = createEventDispatcher();
 
   export let creature: Creature;
-  export let timestamp: string;
+  export let timestamp: string = "";
+  export let showRemove: boolean = true;
+
+  function reroll() {
+    creature = rollCreature();
+    dispatch("rerolled", new RerolledEvent("creature", creature));
+  }
 
   function remove() {
     dispatch("remove");
@@ -36,25 +30,24 @@
     <CardHeader>
       <CardTitle>
         <div class="title">
-          <div class="description">
+          <div class="type">
+            Creature:
             {capitalize(creature.type)}<DieIcon value={creature.roll} />
-            {#if creature.subtype !== ""}({creature.subtype})<DieIcon value={creature.subroll} />{/if}: {capitalize(
-              creature.description
-            )}<DieIcon value={creature.specificroll} />
           </div>
-          <div class="buttons">
-            <ClipboardHelper data={creature} dataType="creature" />
-            <Button id="remove" outline color="danger" on:click={remove}>
-              <Icon name="x" />
-            </Button>
-            <Tooltip target="remove" placement="top">Remove Item</Tooltip>
-          </div>
+          <CardButtons data={creature} dataType="creature" showReroll={true} on:reroll={reroll} {showRemove} on:remove={remove} />
         </div>
       </CardTitle>
     </CardHeader>
     <CardBody>
       <CardText>
         <Container>
+          <Row>
+            <strong>Description:</strong>
+            <ul>
+              {#if creature.subtype !== ""}<li>{capitalize(creature.subtype)}<DieIcon value={creature.subroll} /></li>{/if}
+              <li>{capitalize(creature.description)}<DieIcon value={creature.specificroll} /></li>
+            </ul>
+          </Row>
           <Row>
             <strong>Details:</strong>
             <ul>
@@ -81,7 +74,7 @@
               {#if creature.feature}<li>Feature: {creature.feature.description}<DieIcon value={creature.feature.roll} /></li>{/if}
               {#if creature.npc}<li>
                   NPC Stats:
-                  <NpcCard npc={creature.npc} {timestamp} />
+                  <NpcCard npc={creature.npc} showRemove={false} />
                 </li>{/if}
               {#if creature.numAppearing}<li>
                   Number Appearing: {creature.numAppearing.description}
@@ -96,7 +89,9 @@
         </Container>
       </CardText>
     </CardBody>
-    <CardFooter>{timestamp}</CardFooter>
+    {#if timestamp}
+      <CardFooter>{timestamp}</CardFooter>
+    {/if}
   </Card>
 </main>
 
@@ -107,9 +102,6 @@
   .title {
     display: flex;
     justify-content: space-between;
-  }
-  .title .buttons {
-    display: flex;
   }
   ul {
     margin-left: 2em;

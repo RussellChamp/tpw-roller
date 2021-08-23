@@ -1,32 +1,48 @@
 <script lang="ts">
-  import { Button, Card, CardHeader, CardTitle, CardBody, CardSubtitle, CardText, CardFooter, Container, Row, Icon } from "sveltestrap";
+  import { createEventDispatcher } from "svelte";
+  import { Card, CardHeader, CardTitle, CardBody, CardSubtitle, CardText, CardFooter, Container, Row } from "sveltestrap";
   import { capitalize } from "lodash";
 
   import DieIcon from "./DieIcon.svelte";
   import CreatureCard from "./CreatureCard.svelte";
-  import type { Steading } from "../rollers/steadings";
+  import { rollSteading, Steading } from "../rollers/steadings";
+  import CardButtons from "./CardTitleButtons.svelte";
+  import { RerolledEvent } from "../types/RerolledEvent";
 
+  const dispatch = createEventDispatcher();
   export let steading: Steading;
-  export let timestamp: string;
+  export let timestamp: string = "";
+  export let showRemove: boolean = true;
+
+  function reroll() {
+    steading = rollSteading();
+    dispatch("rerolled", new RerolledEvent("steading", steading));
+  }
+
+  function remove() {
+    dispatch("remove");
+  }
 </script>
 
 <main>
   <Card class="mb-3">
     <CardHeader>
       <CardTitle>
-        {capitalize(steading.category)}
-        <DieIcon value={steading.roll} />
+        <div class="title">
+          <div class="description">Steading: {capitalize(steading.category)}<DieIcon value={steading.roll} /></div>
+          <CardButtons data={steading} dataType="steading" on:reroll={reroll} {showRemove} on:remove={remove} />
+        </div>
       </CardTitle>
     </CardHeader>
     <CardBody>
       <CardText>
         <Container>
           <Row>
-            <h3>Built by:</h3>
-            <CreatureCard creature={steading.builtBy} {timestamp} />
+            <h4>Built by:</h4>
+            <CreatureCard creature={steading.builtBy} showRemove={false} />
           </Row>
           <Row>
-            <h3>Tags</h3>
+            <h4>Tags</h4>
             <ul>
               {#each steading.tags as tag}
                 <li>{tag}</li>
@@ -34,7 +50,7 @@
             </ul>
           </Row>
           <Row>
-            <h3>{capitalize(steading.condition)}:</h3>
+            <h4>{capitalize(steading.condition)}:</h4>
           </Row>
           <Row>
             <h4>{capitalize(steading.benefit.description)} <DieIcon value={steading.benefitRoll} />:</h4>
@@ -55,13 +71,19 @@
         </Container>
       </CardText>
     </CardBody>
-    <CardFooter>{timestamp}</CardFooter>
+    {#if timestamp}
+      <CardFooter>{timestamp}</CardFooter>
+    {/if}
   </Card>
 </main>
 
 <style>
   main {
     text-align: left;
+  }
+  .title {
+    display: flex;
+    justify-content: space-between;
   }
   ul {
     margin-left: 2em;

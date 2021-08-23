@@ -1,13 +1,41 @@
 import { random, replace, sample, sampleSize } from "lodash";
 
+export type DetailType = "ability" | "activity" | "adjective" | "age" | "alignment" | "aspect" | "condition" | "disposition" | "element" |
+  "feature" | "magic type" | "num appearing" | "oddity" | "orientation" | "ruination" | "size" | "tag" | "terrain" | "visibility";
+
 // This is the general implemenetation of details.
 // We are not doing strict class inheritance because that way leads to pain
 export class Detail {
-  constructor(public type: string, public roll: number, public description: string) { }
+  constructor(public type: DetailType, public roll: number, public description: string) { }
+}
+
+export function rollDetail(type: DetailType): { type: DetailType, roll: number, description: string } {
+  switch (type) {
+    case "ability": return rollAbility();
+    case "activity": return rollActivity();
+    case "adjective": return rollAdjective();
+    case "age": return rollAge();
+    case "alignment": return rollAlignment();
+    case "aspect": return rollAspect();
+    case "condition": return rollCondition();
+    case "disposition": return rollDisposition();
+    case "element": return rollElement();
+    case "feature": return rollFeature();
+    case "magic type": return rollMagicType();
+    case "num appearing": return rollNumAppearing();
+    case "oddity": return rollOddity();
+    case "orientation": return rollOrientation();
+    case "ruination": return rollRuination();
+    case "size": return rollSize();
+    case "tag": return rollTag();
+    case "terrain": return rollTerrain();
+    case "visibility": return rollVisibility();
+    default: return { type: type, roll: 0, description: "invalid type" };
+  }
 }
 
 export class Ability {
-  type: string = "ability";
+  type: DetailType = "ability";
   constructor(public roll: number = 0, public description = "") { };
 }
 
@@ -33,7 +61,7 @@ export function rollAbility(roll: number = random(1, 12)): Ability {
 }
 
 export class Activity {
-  type: string = "activity";
+  type: DetailType = "activity";
   constructor(public roll: number = 0, public description: string = "") { };
 }
 
@@ -58,7 +86,7 @@ export function rollActivity(roll: number = random(1, 12)): Activity {
 }
 
 export class Adjective {
-  type: string = "adjective";
+  type: DetailType = "adjective";
   constructor(public roll: number = 0, public description: string = "") { };
 }
 
@@ -83,7 +111,7 @@ export function rollAdjective(roll: number = random(1, 12)): Adjective {
 }
 
 export class Age {
-  type: string = "age";
+  type: DetailType = "age";
   constructor(public roll: number = 0, public description: string = "") { };
 }
 
@@ -108,7 +136,7 @@ export function rollAge(roll: number = random(1, 12)): Age {
 }
 
 export class Alignment {
-  type: string = "alignment";
+  type: DetailType = "alignment";
   constructor(public roll: number = 0, public description: string = "") { };
 }
 
@@ -131,7 +159,7 @@ export function rollAlignment(roll: number = random(1, 12)): Alignment {
 }
 
 export class Aspect {
-  type: string = "aspect";
+  type: DetailType = "aspect";
   constructor(public roll: number = 0, public description: string = "") { };
 }
 
@@ -157,7 +185,7 @@ export function rollAspect(roll: number = random(1, 12)): Aspect {
 }
 
 export class Condition {
-  type: string = "condition";
+  type: DetailType = "condition";
   constructor(public roll: number = 0, public description: string = "") { };
 }
 
@@ -184,7 +212,7 @@ export function rollCondition(roll: number = random(1, 12)): Condition {
 }
 
 export class Disposition {
-  type: string = "disposition";
+  type: DetailType = "disposition";
   constructor(public roll: number = 0, public description: string = "") { };
 }
 
@@ -211,7 +239,7 @@ export function rollDisposition(roll: number = random(1, 12)): Disposition {
 }
 
 export class Element {
-  type: string = "element";
+  type: DetailType = "element";
   constructor(public roll: number = 0, public description: string = "") { };
 }
 
@@ -236,7 +264,7 @@ export function rollElement(roll: number = random(1, 12)): Element {
 }
 
 export class Feature {
-  type: string = "feature";
+  type: DetailType = "feature";
   constructor(public roll: number = 0, public description: string = "") { };
 }
 
@@ -271,7 +299,7 @@ export function rollFeature(roll: number = random(1, 12)): Feature {
 }
 
 export class MagicType {
-  type: string = "magic type";
+  type: DetailType = "magic type";
   constructor(public roll: number = 0, public description: string = "") { };
 }
 
@@ -295,7 +323,7 @@ export function rollMagicType(roll: number = random(1, 12)): MagicType {
 }
 
 export class NumAppearing {
-  type: string = "num appearing";
+  type: DetailType = "num appearing";
   constructor(public roll: number = 0, public description: string = "", public count: string = "") { };
 }
 
@@ -316,7 +344,7 @@ export function rollNumAppearing(roll: number = random(1, 12)): NumAppearing {
 }
 
 export class Oddity {
-  type: string = "oddity";
+  type: DetailType = "oddity";
   constructor(public roll: number = 0, public description: string = "") { };
 }
 
@@ -342,7 +370,7 @@ export function rollOddity(roll: number = random(1, 12)): Oddity {
 }
 
 export class Orientation {
-  type: string = "orientation";
+  type: DetailType = "orientation";
   constructor(public roll: number = 0, public description: string = "") { };
 }
 
@@ -375,7 +403,7 @@ export function rollOrientation(roll: number = random(1, 12)): Orientation {
 }
 
 export class Ruination {
-  type: string = "ruination";
+  type: DetailType = "ruination";
   constructor(public roll: number = 0, public description: string = "") { };
 }
 
@@ -404,7 +432,7 @@ export function rollRuination(roll: number = random(1, 12)): Ruination {
 }
 
 export class Size {
-  type: string = "size";
+  type: DetailType = "size";
   constructor(public roll: number = 0, public description: string = "") { };
 }
 
@@ -427,7 +455,7 @@ export function rollSize(roll: number = random(1, 12)): Size {
 }
 
 export class Tag {
-  type: string = "tag";
+  type: DetailType = "tag";
   constructor(public roll: number = 0, public description: string = "") { };
 }
 
@@ -461,7 +489,7 @@ export function rollTag(roll: number = random(1, 12)) {
 }
 
 export class Terrain {
-  type: string = "terrain";
+  type: DetailType = "terrain";
   constructor(public roll: number = 0, public description: string = "") { };
 }
 
@@ -488,7 +516,7 @@ export function rollTerrain(roll: number = random(1, 12)): Terrain {
 }
 
 export class Visibility {
-  type: string = "visibility";
+  type: DetailType = "visibility";
   constructor(public roll: number = 0, public description: string = "") { };
 }
 

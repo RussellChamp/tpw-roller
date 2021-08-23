@@ -17,6 +17,7 @@
   import Footer from "./components/Footer.svelte";
   import MultiCard from "./components/MultiCard.svelte";
   import { RollCard } from "./types/RollCard";
+  import type { RerolledEvent } from "./types/RerolledEvent";
 
   let rollThemBones = new Audio("https://soundbible.com/mp3/Shake And Roll Dice-SoundBible.com-591494296.mp3");
   let playSounds = localStorage?.getItem("playSounds") != "false";
@@ -50,6 +51,11 @@
         rollThemBones.pause();
       }, playTime);
     }
+  }
+
+  function rerolled(event: CustomEvent<RerolledEvent>) {
+    // console.log("rerolled card value", event.detail);
+    playAudio();
   }
 
   function remove(event: CustomEvent<RollCard>) {
@@ -94,7 +100,7 @@
       <Col sm="9">
         <h3>Results:</h3>
         {#each cards as card}
-          <MultiCard {card} on:remove={remove} />
+          <MultiCard {card} on:rerolled={rerolled} on:remove={remove} />
         {/each}
       </Col>
     </Row>

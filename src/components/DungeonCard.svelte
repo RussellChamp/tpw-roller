@@ -1,11 +1,24 @@
 <script lang="ts">
+  import { createEventDispatcher } from "svelte";
   import { Card, CardHeader, CardTitle, CardBody, CardSubtitle, CardText, CardFooter, Container, Row, Icon } from "sveltestrap";
   import { capitalize } from "lodash";
 
-  import type { Dungeon } from "../rollers/dungeons";
+  import { Dungeon, rollDungeon } from "../rollers/dungeons";
+  import CardButtons from "./CardTitleButtons.svelte";
+  import { RerolledEvent } from "../types/RerolledEvent";
 
+  const dispatch = createEventDispatcher();
   export let dungeon: Dungeon;
   export let timestamp;
+
+  function reroll() {
+    dungeon = rollDungeon();
+    dispatch("rerolled", new RerolledEvent("dungeon", dungeon));
+  }
+
+  function remove() {
+    dispatch("remove");
+  }
 
   function getIcon(t: string, c: string): string {
     return t == "discovery"
@@ -25,7 +38,16 @@
 <main>
   <Card class="mb-3">
     <CardHeader>
-      <CardTitle>{capitalize(dungeon.size.description)} {dungeon.function.description} built by {dungeon.builder.description}</CardTitle>
+      <CardTitle>
+        <div class="title">
+          <div class="description">
+            Dungeon:
+            {capitalize(dungeon.size.description)}
+            {dungeon.function.description} built by {dungeon.builder.description}
+          </div>
+          <CardButtons data={dungeon} dataType="dungeon" on:reroll={reroll} on:remove={remove} />
+        </div>
+      </CardTitle>
     </CardHeader>
     <CardBody>
       <CardSubtitle>
@@ -68,13 +90,19 @@
         </Container>
       </CardText>
     </CardBody>
-    <CardFooter>{timestamp}</CardFooter>
+    {#if timestamp}
+      <CardFooter>{timestamp}</CardFooter>
+    {/if}
   </Card>
 </main>
 
 <style>
   main {
     text-align: left;
+  }
+  .title {
+    display: flex;
+    justify-content: space-between;
   }
   ul {
     margin-left: 2em;
