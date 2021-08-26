@@ -10,7 +10,7 @@ export class Npc {
   hometown: string;
   context: Context;
   occupation: Occupation
-  traits: Trait[];
+  traits: Trait[] = [];
   follower: Follower;
 
   getDescription(fullDesc: boolean = false) {
