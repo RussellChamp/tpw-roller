@@ -243,7 +243,7 @@ const armors: Armor[] = [
 ];
 
 function rollArmor(): Armor {
-    let armor = sample(armors);
+    let armor = { ...sample(armors) };
     if (random(1, 2) == 2) {
         armor.description += " and a shield";
         armor.value += 1;
